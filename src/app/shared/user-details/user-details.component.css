@@ -1,0 +1,48 @@
+.crop {
+    border-radius: 100%;
+    line-height: 1em;
+    padding: 1em;
+    text-align: center;
+    margin: 0em;
+    width: 3em;
+    height: 3em;
+    float: left;
+    text-transform: uppercase;
+}
+
+.about {
+    float: left;
+    padding-left: 0.4em;
+}
+
+.online,
+.offline,
+.me,
+.warning {
+    margin-right: 3px;
+    font-size: 0.8em;
+}
+
+.online {
+    color: #86BB71;
+}
+
+.offline {
+    color: #E38968;
+}
+
+.me {
+    color: #94C2ED;
+}
+
+.warning {
+    color: #00c8e7;
+}
+
+.status {
+    color: #92959E;
+}
+
+.name {
+    float: left;
+}

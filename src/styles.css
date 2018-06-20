@@ -1,1 +1,176 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+/* Fix user-agent */
+
+@import "~bootstrap/dist/css/bootstrap.css";
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+}
+
+html,
+input {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style: none;
+    word-wrap: break-word;
+}
+
+.panel-body {
+    overflow-y: scroll;
+    min-height: 400px;
+    height: 100%;
+}
+
+ ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #F5F5F5;
+}
+
+ ::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+ ::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #555;
+}
+
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+    font-weight: 400;
+}
+
+.form-signin .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.font-small {
+    font-size: 0.7em !important;
+}
+
+.displayBlockMobile {
+    display: none;
+}
+
+.sendBoxStyle {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 97%;
+}
+
+.displayNoneMobile {
+    display: block;
+}
+
+.navbar-nav {
+    float: right !important;
+    width: 100% !important;
+    display: block !important;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+.greenBgStyle {
+    background: #80FF9F;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.chatRightBox {
+    position: relative;
+    padding-right: 0;
+}
+
+.userNameHeading {
+    font-size: 1.3em;
+    display: block;
+    box-shadow: 0 0 3px 0 #ddd;
+}
+
+.chatBoxHeight {
+    height: 70vh;
+    overflow-y: auto;
+    display: block;
+    text-align: center;
+}
+
+.mainHeading {
+    font-size: 1.5em;
+}
+
+.messageRowClass {
+    color: white;
+    width: 100%;
+    float: left;
+    text-align: left;
+}
+
+@media only screen and (max-width:575px) {
+    .paddingLeftMobileNone {
+        padding-left: 0 !important;
+    }
+    .displayNoneMobile {
+        display: none;
+    }
+    .displayBlockMobile {
+        display: block;
+    }
+    .sendBoxStyle {
+        bottom: auto;
+    }
+    .noPadMob {
+        padding: 0 !important;
+    }
+    .mobileMenu {
+        margin-top: 56px;
+    }
+}
