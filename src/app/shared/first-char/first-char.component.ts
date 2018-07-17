@@ -38,11 +38,6 @@ export class FirstCharComponent implements OnInit,OnChanges {
     this.notify.emit(this._name);
   }
 
-  
-
-   
-
-
   }// end show full name
   
 
