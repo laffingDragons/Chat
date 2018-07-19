@@ -2,6 +2,7 @@ import { Component, OnInit,ViewContainerRef } from '@angular/core';
 import { AppService } from './../../app.service';
 import { Router } from '@angular/router';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
+import { Cookie } from 'ng2-cookies/ng2-cookies'
 
 @Component({
   selector: 'app-signup',
@@ -15,7 +16,6 @@ export class SignupComponent implements OnInit {
   public mobile: any;
   public email: any;
   public password: any;
-  public apiKey: any;
 
   constructor(  
     public appService: AppService,
@@ -53,9 +53,6 @@ export class SignupComponent implements OnInit {
       this.toastr.warning('enter password')
      
 
-    } else if (!this.apiKey) {
-      this.toastr.warning('Enter your API key')
-
     } else {
 
       let data = {
@@ -64,7 +61,6 @@ export class SignupComponent implements OnInit {
         mobile: this.mobile,
         email: this.email,
         password: this.password,
-        apiKey: this.apiKey
       }
 
       console.log(data);
@@ -78,9 +74,18 @@ export class SignupComponent implements OnInit {
 
             this.toastr.success('Signup successful');
 
+            Cookie.set('authtoken', apiResponse.data.authToken);
+            
+            Cookie.set('receiverId', apiResponse.data.userDetails.userId);
+           
+            Cookie.set('receiverName', apiResponse.data.userDetails.firstName + ' ' + apiResponse.data.userDetails.lastName);
+          
+            this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails)
+           
+
             setTimeout(() => {
 
-              this.goToSignIn();
+              this.router.navigate(['/chat']);
 
             }, 2000);
 
@@ -93,6 +98,7 @@ export class SignupComponent implements OnInit {
         }, (err) => {
 
           this.toastr.error('some error occured');
+          
 
         });
 

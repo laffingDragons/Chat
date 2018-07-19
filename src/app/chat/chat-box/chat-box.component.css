@@ -313,6 +313,19 @@ body {
     color: #999;
 }
 
+input, button, select, optgroup, textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: 0.8rem;
+    line-height: normal;
+}
+.t-area{
+    width: 75% !important;  
+    height: 2.5em;
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+}
+
 @media only screen and (max-width:575px) {
     .chat .chat-history {
         height: 50vh;

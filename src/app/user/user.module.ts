@@ -6,6 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ToastModule} from 'ng2-toastr/ng2-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @NgModule({
   imports: [
@@ -14,9 +16,11 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     ToastModule.forRoot(),
     FormsModule,
     RouterModule.forChild([
-      {path: 'sign-up', component: SignupComponent }
+      {path: 'sign-up', component: SignupComponent },
+      {path: 'forgot-password', component: ForgotPasswordComponent },
+      {path:'change-password/:userId', component: ChangePasswordComponent }
     ])
   ],
-  declarations: [LoginComponent, SignupComponent]
+  declarations: [LoginComponent, SignupComponent, ForgotPasswordComponent, ChangePasswordComponent]
 })
 export class UserModule { }

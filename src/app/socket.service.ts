@@ -15,7 +15,7 @@ import { HttpErrorResponse, HttpParams } from "@angular/common/http";
 @Injectable()
 export class SocketService {
 
-  private url = 'http://localhost:3000';
+  private url = 'http://192.168.1.177:3000';
 
   private socket;
 

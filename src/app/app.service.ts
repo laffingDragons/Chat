@@ -13,7 +13,7 @@ import { HttpErrorResponse, HttpParams } from "@angular/common/http";
 @Injectable()
 export class AppService {
 
-  private url =  'http://localhost:3000';
+  private url =  'http://192.168.1.177:3000';
 
   constructor(
     public http: HttpClient
@@ -46,7 +46,6 @@ export class AppService {
       .set('mobile', data.mobile)
       .set('email', data.email)
       .set('password', data.password)
-      .set('apiKey', data.apiKey);
 
     return this.http.post(`${this.url}/api/v1/users/signup`, params);
 
@@ -62,9 +61,26 @@ export class AppService {
   } // end of signinFunction function.
 
   
-  public logout(): Observable<any> {
+  public forgotPasswordFunction(data): Observable<any> {
 
     const params = new HttpParams()
+      .set('email', data.email)
+
+    return this.http.post(`${this.url}/api/v1/users/forgot-password`, params);
+  } // end of forgotPasswordFunction function.
+
+  public changePasswordFunction(data): Observable<any> {
+
+    const params = new HttpParams()
+      .set('userId', data.userId)
+      .set('password', data.password);
+
+    return this.http.put(`${this.url}/api/v1/users/change-password`, params);
+  } // end of signinFunction function.
+
+  public logout(): Observable<any> {
+
+    const params = new HttpParams() 
       .set('authToken', Cookie.get('authtoken'))
 
     return this.http.post(`${this.url}/api/v1/users/logout`, params);
@@ -80,7 +96,7 @@ export class AppService {
     if (err.error instanceof Error) {
 
       errorMessage = `An error occurred: ${err.error.message}`;
-
+      
     } else {
 
       errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;

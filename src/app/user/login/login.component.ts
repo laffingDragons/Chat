@@ -35,6 +35,12 @@ export class LoginComponent implements OnInit {
 
   } // end goToSignUp
 
+  public forgotPassword: any = () => {
+
+    this.router.navigate(['/forgot-password']);
+
+  } // end forgotpassword
+
   public signinFunction: any = () => {
 
     if (!this.email) {
@@ -69,14 +75,18 @@ export class LoginComponent implements OnInit {
             
              this.router.navigate(['/chat']);
 
+          }else if(apiResponse.status === 404){
+
+            this.toastr.error("Email or Password wrong");
+
           } else {
 
             this.toastr.error(apiResponse.message)
-          
 
           }
 
         }, (err) => {
+          
           this.toastr.error('some error occured')
 
         });
