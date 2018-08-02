@@ -13,7 +13,7 @@ import { HttpErrorResponse, HttpParams } from "@angular/common/http";
 @Injectable()
 export class AppService {
 
-  private url =  'http://192.168.2.104:3000';
+  public url =  'http://192.168.2.104:3000';
 
   constructor(
     public http: HttpClient
@@ -116,6 +116,15 @@ export class AppService {
 
   }
 
+  // get single room details
+  public getSingleRoom(id){
+    
+    let response = this.http.get(`${this.url}/api/v1/room/${id}/details?authToken=${Cookie.get('authtoken')}`);
+    
+    return response;
+
+  }
+
   //REquest to join a chatroom
   public requestForJoiningChatroom(roomId, userId): Observable<any>{
 
@@ -125,6 +134,20 @@ export class AppService {
     return this.http.put(`${this.url}/api/v1/room/${roomId}`, params);
 
   }
+
+  //send invitation mail
+  public inviteMail(data): Observable<any> {
+
+    const params = new HttpParams()
+      .set('roomName', data.roomName)
+      .set('email', data.email)
+      .set('link', data.link)
+      .set('senderName', data.senderName)
+     
+
+    return this.http.post(`${this.url}/api/v1/room/invite?authToken=${Cookie.get('authtoken')}`, params);
+
+  } // end of signupFunction function.
   
 
   private handleError(err: HttpErrorResponse) {
