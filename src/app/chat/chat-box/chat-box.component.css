@@ -340,7 +340,7 @@ input, button, select, optgroup, textarea {
 
 @media only screen and (min-width:769px) and (max-width:992px) {
     .chat .chat-history {
-        height: 66vh;
+        height: 64vh;
     }
 }
 

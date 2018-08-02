@@ -22,7 +22,7 @@
         </p>
 
         <p *ngIf='userId == chatroom.admin || chatroom.members.includes(userId)' class="float-right">
-          <button class="btn btn-primary btn-sm">Chat</button>
+          <button class="btn btn-primary btn-sm" [routerLink]="['/chat']">Chat</button>
         </p>
 
         <p *ngIf='chatroom.requested.includes(userId)' class="float-right">

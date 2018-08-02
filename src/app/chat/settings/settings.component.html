@@ -1,0 +1,84 @@
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="container">
+  
+  <div class="row p-0 m-0" *ngIf="info">
+
+    <div class="col-sm">
+      <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='goBack()'> ← </button>
+      <br>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          Launch demo modal
+        </button>
+
+    </div>
+
+    <div class="col-sm p-5">
+
+      <h2 class="form-signin-heading">Edit Chatroom</h2>
+
+      <br>
+
+      <span>Chatroom Name </span>
+
+      <label for="inputFirstName" class="sr-only">Chatroom Name</label>
+
+      <input type="text" id="chatroomName" class="form-control" [(ngModel)]=info.roomName required autofocus>
+
+      <br>
+
+      <button class="btn btn-lg btn-success btn-block" type="submit" (click)="chatroomSubmit()">Edit Group</button>
+
+    </div>
+
+    <div class="col-sm" style="padding-top:60px">
+
+      <h4> Select Members</h4>
+      <div class="fixed-height">
+        <div *ngFor="let user of users">
+          <label>
+            <input type="checkbox" value="{{user.userId}}" [(ngModel)]="user.Checked" [name]="user.firstName" [attr.disabled]="user.userId==1 ? true : null"
+            />
+            <span innerHTML="{{user.firstName}}"></span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <hr>
+  <br>
+      <div class="row">
+          <div class="col-sm p-5">
+        <h3 class="d-block">Invitaion</h3>
+  
+        <span>Enter Email to send Invitaion link</span>
+        <br>
+        <label for="inputFirstName" class="sr-only">Chatroom Name</label>
+  
+        <input type="text" id="Invitaion-email" class="form-control" [(ngModel)]=mail placeholder="Email" required>
+  
+        <button class="btn btn-lg btn-success btn-sm" (click)='sendInvitationMail()' >Send invite</button>&nbsp;&nbsp;
+        
+        <button title={{invitation}} class="btn btn-lg btn-success btn-sm" (click)="copyMessage(invitation)" value='click to copy'>Copy Link to Clipboard</button>
+      </div>
+      </div>
+</div>

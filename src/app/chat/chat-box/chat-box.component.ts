@@ -40,10 +40,10 @@ export class ChatBoxComponent implements OnInit{
   public userId: any;
   public Rooms: any;
   public allRooms:any;
-  roomName: any;
-  roomId: any;
-  roomInfo: any;
-
+  public roomName: any;
+  public roomInfo: any;
+  public roomId: any;
+  public gearIcon: boolean = false;
 
   constructor(
     public AppService: AppService,
@@ -184,6 +184,8 @@ export class ChatBoxComponent implements OnInit{
   } // end loadPreviousChat
 
   public userSelectedToChat: any = (id, name) => {
+
+    this.gearIcon = false;
 
     console.log("setting user as active") 
 
@@ -362,6 +364,8 @@ public getPreviousChatOfRoom :any = (id)=>{
 
 //chatting in a group
 public roomSelectedToChat: any = (id, name) => {
+
+  this.gearIcon = true;
 
   Cookie.set('roomId', id);
 

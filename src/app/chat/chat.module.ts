@@ -11,6 +11,7 @@ import { RemoveSpecialCharPipe } from './../shared/pipe/remove-special-char.pipe
 import { ChatRouteGuardService } from './chat-route-guard.service';
 import { CreateChatroomComponent } from './create-chatroom/create-chatroom.component';
 import { AllChatroomComponent } from './all-chatroom/all-chatroom.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   imports: [
@@ -23,10 +24,11 @@ import { AllChatroomComponent } from './all-chatroom/all-chatroom.component';
       { path: 'chat', component: ChatBoxComponent, canActivate:[ChatRouteGuardService] },
       { path: 'create-chatroom', component: CreateChatroomComponent },
       { path: 'all-chatroom', component: AllChatroomComponent },
+      { path: 'settings/:roomId', component: SettingsComponent },
     ]),
     SharedModule
   ],
-  declarations: [ChatBoxComponent,  RemoveSpecialCharPipe, CreateChatroomComponent, AllChatroomComponent],
+  declarations: [ChatBoxComponent,  RemoveSpecialCharPipe, CreateChatroomComponent, AllChatroomComponent, SettingsComponent],
   providers:[ChatRouteGuardService]
 })
 export class ChatModule { }
