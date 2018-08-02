@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="row">
+    <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='goBack()'> ← </button>
+  </div>
+  <div class="row">
+    <h2 class="mx-auto">Chatrooms</h2>
+  </div>
+  <br>
+  <br>
+  <div *ngIf='allRooms' class="row">
+    <div class="offset-2 col-md-8">
+      <div *ngFor='let chatroom of allRooms'>
+        <span>
+          <h4 class="d-inline">{{chatroom.roomName}}</h4>
+          <span *ngIf='chatroom.active' class="dot-green"></span>
+          <span *ngIf='!chatroom.active' class="dot-red"></span>
+        </span>
+
+        <!-- this button will seen when user room is active and the user is not admin  or member or requested for room -->
+        <p *ngIf='chatroom.active && userId != chatroom.admin && !chatroom.requested.includes(userId) && !chatroom.members.includes(userId)' class="float-right">
+          <button class="btn btn-success btn-sm" (click)="requestToJoinChatroom(chatroom.roomId)">Request</button>
+        </p>
+
+        <p *ngIf='userId == chatroom.admin || chatroom.members.includes(userId)' class="float-right">
+          <button class="btn btn-primary btn-sm">Chat</button>
+        </p>
+
+        <p *ngIf='chatroom.requested.includes(userId)' class="float-right">
+          <button class="btn btn-warning btn-sm" disabled>Pending</button>
+        </p>
+
+        <br>
+        <br> No. of Members:
+        <div class="d-inline">
+          <b>{{ chatroom.members.length }}</b>
+        </div>
+        <p class="float-right">Created On:
+          <b>{{chatroom.createdOn | date}}</b>
+        </p>
+        <hr>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>

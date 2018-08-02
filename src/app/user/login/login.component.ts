@@ -1,5 +1,5 @@
 import { Component, OnInit,ViewContainerRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { AppService } from './../../app.service';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
@@ -14,10 +14,12 @@ export class LoginComponent implements OnInit {
 
   public email: any;
   public password: any;
+  public roomId: any;
 
   constructor(
     public appService: AppService,
     public router: Router,
+    public _route: ActivatedRoute,
     private toastr: ToastsManager,
     vcr: ViewContainerRef,
   ) {
@@ -27,6 +29,18 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.roomId = this._route.snapshot.queryParams["roomId"]; //code to capture Chat room if there, if they have been ivited via mail
+
+     let userInfo = this.appService.getUserInfoFromLocalstorage() // code to check wether user has already login .
+
+    //code to redirect user to chat screen if they has been already verify
+     if(userInfo.userId){
+
+      this.router.navigate(['/chat']);
+
+     }
+    
   }
 
   public goToSignUp: any = () => {
@@ -65,13 +79,15 @@ export class LoginComponent implements OnInit {
           if (apiResponse.status === 200) {
             console.log(apiResponse)
 
+            apiResponse.data.userDetails.roomId = this.roomId; // code to set roomId which is capture by query
+
              Cookie.set('authtoken', apiResponse.data.authToken);
             
              Cookie.set('receiverId', apiResponse.data.userDetails.userId);
             
              Cookie.set('receiverName', apiResponse.data.userDetails.firstName + ' ' + apiResponse.data.userDetails.lastName);
            
-             this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails)
+             this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails);
             
              this.router.navigate(['/chat']);
 

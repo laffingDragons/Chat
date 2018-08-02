@@ -1,0 +1,39 @@
+<div class="row p-0 m-0">
+
+  <div class="col-sm">
+    <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='goBack()'> ← </button>
+  </div>
+
+  <div class="col-sm p-5">
+
+    <h2 class="form-signin-heading">Create a Chatroom</h2>
+
+    <br>
+
+    <span>Chatroom Name </span>
+
+    <label for="inputFirstName" class="sr-only">Chatroom Name</label>
+
+    <input type="text" id="chatroomName" class="form-control" [(ngModel)]="roomName" placeholder="Chatroom Name" required autofocus>
+
+    <br>
+
+    <button class="btn btn-lg btn-success btn-block" type="submit" (click)="chatroomSubmit()">Create Group</button>
+
+  </div>
+
+  <div class="col-sm" style="padding-top:60px">
+
+    <h4> Select Members</h4>
+    <div class="fixed-height">
+        <div *ngFor="let user of users">
+            <label>
+            <input type="checkbox" value="{{user.userId}}" [(ngModel)]="user.Checked" [name]="user.firstName" [attr.disabled]="user.userId==1 ? true : null" />
+            <span innerHTML="{{user.firstName}}"></span>
+        </label>
+        </div>
+      </div>
+      
+    </div>
+
+</div>

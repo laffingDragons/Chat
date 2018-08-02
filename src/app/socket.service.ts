@@ -15,7 +15,7 @@ import { HttpErrorResponse, HttpParams } from "@angular/common/http";
 @Injectable()
 export class SocketService {
 
-  private url = 'http://192.168.1.177:3000';
+  private url = 'http://192.168.2.104:3000';
 
   private socket;
 
@@ -104,7 +104,16 @@ export class SocketService {
       .do(data => console.log('Data Received'))
       .catch(this.handleError);
 
-  } // end logout function
+  } 
+
+  public getChatroomChat( roomId, skip): Observable<any> {
+    
+    return this.http.get(`${this.url}/api/v1/chat/get/for/group?roomId=${roomId}&skip=${skip}&authToken=${Cookie.get('authtoken')}`)
+      .do(data => console.log('Data Received'))
+      .catch(this.handleError);
+
+  } 
+
 
   public chatByUserId = (userId) => {
 
@@ -126,6 +135,13 @@ export class SocketService {
 
   } // end getChatMessage
 
+  public CreateRoom = (roomObject) => {
+    console.log('roomOBJ',roomObject);
+    
+
+    this.socket.emit('create-room', roomObject);
+
+  } // end getChatMessage
 
   public exitSocket = () =>{
 
@@ -136,7 +152,13 @@ export class SocketService {
   }// end exit socket
 
 
+  //create chat room
 
+  public CreateChatroom = (roomObject) => {
+
+    this.socket.emit('create-room', roomObject);
+
+  }// end create room
 
   private handleError(err: HttpErrorResponse) {
 

@@ -163,7 +163,7 @@ body {
     padding: 2em 2em 1.42em;
     border-bottom: 0.15em solid white;
     overflow-y: scroll;
-    height: 80vh;
+    height: 73vh;
 }
 
 .chat .chat-history .message-data {
@@ -323,30 +323,30 @@ input, button, select, optgroup, textarea {
     width: 75% !important;  
     height: 2.5em;
     margin-bottom: 0px !important;
-    padding-bottom: 0px !important;
+    padding: 7px !important;
 }
 
 @media only screen and (max-width:575px) {
     .chat .chat-history {
-        height: 50vh;
+        height: 61vh;
     }
 }
 
 @media only screen and (min-width:576px) and (max-width:768px) {
     .chat .chat-history {
-        height: 50vh;
+        height: 66vh;
     }
 }
 
 @media only screen and (min-width:769px) and (max-width:992px) {
     .chat .chat-history {
-        height: 65vh;
+        height: 66vh;
     }
 }
 
-@media only screen and (min-width:993px) and (max-width:1200 px) {
+@media only screen and (min-width:993px) and (max-width:1200px) {
     .chat .chat-history {
-        height: 50vh;
+        height: 66vh;
     }
 }
 
@@ -400,4 +400,8 @@ input, button, select, optgroup, textarea {
 
 .name {
     float: left;
+}
+.scrollables{
+    height: 200px;
+    overflow-y: scroll;
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit,ViewContainerRef } from '@angular/core';
 import { AppService } from './../../app.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { Cookie } from 'ng2-cookies/ng2-cookies'
 
@@ -17,15 +17,22 @@ export class SignupComponent implements OnInit {
   public email: any;
   public password: any;
 
+  public roomId: any;
+
   constructor(  
     public appService: AppService,
     public router: Router,
+    public _route: ActivatedRoute,
     private toastr: ToastsManager,
     vcr: ViewContainerRef) {
       this.toastr.setRootViewContainerRef(vcr);
      }
 
   ngOnInit() {
+
+    this.roomId = this._route.snapshot.queryParams["roomId"]; //code to capture Chat room if there, if they have been ivited via mail
+
+
   }
 
   public goToSignIn: any = () => {
@@ -69,6 +76,8 @@ export class SignupComponent implements OnInit {
         .subscribe((apiResponse) => {
 
           console.log(apiResponse);
+
+          apiResponse.data.userDetails.roomId = this.roomId; // code to set roomId which is capture by query
 
           if (apiResponse.status === 200) {
 

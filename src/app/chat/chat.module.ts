@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ChatBoxComponent } from './chat-box/chat-box.component';
 import { RouterModule, Routes } from '@angular/router';
 import {ToastModule} from 'ng2-toastr/ng2-toastr';
@@ -8,18 +9,24 @@ import { SharedModule } from '../shared/shared.module';
 import { UserDetailsComponent } from '../shared/user-details/user-details.component';
 import { RemoveSpecialCharPipe } from './../shared/pipe/remove-special-char.pipe';
 import { ChatRouteGuardService } from './chat-route-guard.service';
+import { CreateChatroomComponent } from './create-chatroom/create-chatroom.component';
+import { AllChatroomComponent } from './all-chatroom/all-chatroom.component';
 
 @NgModule({
   imports: [
     CommonModule,
     BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
     ToastModule.forRoot(),
     RouterModule.forChild([ 
-      { path: 'chat', component: ChatBoxComponent,canActivate:[ChatRouteGuardService] }
+      { path: 'chat', component: ChatBoxComponent, canActivate:[ChatRouteGuardService] },
+      { path: 'create-chatroom', component: CreateChatroomComponent },
+      { path: 'all-chatroom', component: AllChatroomComponent },
     ]),
     SharedModule
   ],
-  declarations: [ChatBoxComponent,RemoveSpecialCharPipe],
+  declarations: [ChatBoxComponent,  RemoveSpecialCharPipe, CreateChatroomComponent, AllChatroomComponent],
   providers:[ChatRouteGuardService]
 })
 export class ChatModule { }

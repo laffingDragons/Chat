@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 //routing module
 import {RouterModule, Routes } from '@angular/router';
@@ -23,6 +25,8 @@ import { SocketService } from './socket.service';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastModule.forRoot(),
     NgbModule.forRoot(),

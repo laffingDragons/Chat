@@ -13,7 +13,7 @@ import { HttpErrorResponse, HttpParams } from "@angular/common/http";
 @Injectable()
 export class AppService {
 
-  private url =  'http://192.168.1.177:3000';
+  private url =  'http://192.168.2.104:3000';
 
   constructor(
     public http: HttpClient
@@ -38,6 +38,15 @@ export class AppService {
 
   }
 
+  //get all users
+  public getAllUsers(){
+    
+    let response = this.http.get(`${this.url}/api/v1/users/view/all?authToken=${Cookie.get('authtoken')}`);
+    
+    return response;
+
+  }
+
   public signupFunction(data): Observable<any> {
 
     const params = new HttpParams()
@@ -58,6 +67,7 @@ export class AppService {
       .set('password', data.password);
 
     return this.http.post(`${this.url}/api/v1/users/login`, params);
+
   } // end of signinFunction function.
 
   
@@ -67,7 +77,9 @@ export class AppService {
       .set('email', data.email)
 
     return this.http.post(`${this.url}/api/v1/users/forgot-password`, params);
+
   } // end of forgotPasswordFunction function.
+
 
   public changePasswordFunction(data): Observable<any> {
 
@@ -76,17 +88,43 @@ export class AppService {
       .set('password', data.password);
 
     return this.http.put(`${this.url}/api/v1/users/change-password`, params);
+
   } // end of signinFunction function.
+
 
   public logout(): Observable<any> {
 
     const params = new HttpParams() 
+
       .set('authToken', Cookie.get('authtoken'))
 
     return this.http.post(`${this.url}/api/v1/users/logout`, params);
 
   } // end logout function
 
+  //--------------------------------------end  of user managment ------------------------------//
+
+
+  // Chatroom services
+  
+  //get all users
+  public getAllRooms(){
+    
+    let response = this.http.get(`${this.url}/api/v1/room/all?authToken=${Cookie.get('authtoken')}`);
+    
+    return response;
+
+  }
+
+  //REquest to join a chatroom
+  public requestForJoiningChatroom(roomId, userId): Observable<any>{
+
+    const params = new HttpParams()
+      .set('requested', userId)
+      
+    return this.http.put(`${this.url}/api/v1/room/${roomId}`, params);
+
+  }
   
 
   private handleError(err: HttpErrorResponse) {

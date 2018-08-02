@@ -50,7 +50,7 @@ export class ForgotPasswordComponent implements OnInit {
 
         console.log(apiResponse)
         if (apiResponse.status === 200) {
-          this.toastr.error(apiResponse.message) 
+          this.toastr.success(apiResponse.message) 
           setTimeout(() => {
             
              this.router.navigate(['/']);

@@ -21,8 +21,6 @@ export class ChatBoxComponent implements OnInit{
   
   public scrollMe: ElementRef;
 
-  
-
   public authToken: any;
   public userInfo: any;
   public userList: any = [];
@@ -38,6 +36,13 @@ export class ChatBoxComponent implements OnInit{
   public pageValue: number = 0;
   public loadingPreviousChat: boolean = false;
 
+  //for chatroom
+  public userId: any;
+  public Rooms: any;
+  public allRooms:any;
+  roomName: any;
+  roomId: any;
+  roomInfo: any;
 
 
   constructor(
@@ -71,10 +76,11 @@ export class ChatBoxComponent implements OnInit{
     this.checkStatus();
 
     this.verifyUserConfirmation();
-    this.getOnlineUserList()
+    this.getOnlineUserList();
 
     this.getMessageFromAUser()
 
+    this.getAllRooms();
 
 
   }
@@ -218,9 +224,6 @@ export class ChatBoxComponent implements OnInit{
 
 
 
-
-
-
   public sendMessageUsingKeypress: any = (event: any) => {
 
     if (event.keyCode === 13) { // 13 is keycode of enter.
@@ -233,26 +236,52 @@ export class ChatBoxComponent implements OnInit{
 
   public sendMessage: any = () => {
 
-    if(this.messageText){
+    if(Cookie.get('roomId')){
 
-      let chatMsgObject = {
-        senderName: this.userInfo.firstName + " " + this.userInfo.lastName,
-        senderId: this.userInfo.userId,
-        receiverName: Cookie.get('receiverName'),
-        receiverId: Cookie.get('receiverId'),
-        message: this.messageText,
-        createdOn: new Date()
-      } // end chatMsgObject
-      console.log(chatMsgObject);
-      this.SocketService.SendChatMessage(chatMsgObject)
-      this.pushToChatWindow(chatMsgObject)
-      
+      if(this.messageText){
+  
+        let chatMsgObject = {
+          senderName: this.userInfo.firstName + " " + this.userInfo.lastName,
+          senderId: this.userInfo.userId,
+          chatRoom: Cookie.get('roomId'),
+          message: this.messageText,
+          createdOn: new Date()
+        } // end chatMsgObject
+        console.log(chatMsgObject);
+        this.SocketService.SendChatMessage(chatMsgObject)
+        this.pushToChatWindow(chatMsgObject)
+  
+      }
+      else{
+        this.toastr.warning('text message can not be empty')
+  
+      }
+
+    }else{
+
+      if(this.messageText){
+  
+        let chatMsgObject = {
+          senderName: this.userInfo.firstName + " " + this.userInfo.lastName,
+          senderId: this.userInfo.userId,
+          receiverName: Cookie.get('receiverName'),
+          receiverId: Cookie.get('receiverId'),
+          message: this.messageText,
+          createdOn: new Date()
+        } // end chatMsgObject
+        console.log(chatMsgObject);
+        this.SocketService.SendChatMessage(chatMsgObject)
+        this.pushToChatWindow(chatMsgObject)
+        
+  
+      }
+      else{
+        this.toastr.warning('text message can not be empty')
+  
+      }
 
     }
-    else{
-      this.toastr.warning('text message can not be empty')
 
-    }
 
   } // end sendMessage
 
@@ -280,6 +309,75 @@ export class ChatBoxComponent implements OnInit{
       });//end subscribe
 
   }// end get message from a user 
+
+
+//  get all chatrooms and find the user
+public getAllRooms = () => {
+
+  this.userId = this.AppService.getUserInfoFromLocalstorage().userId;
+
+  this.AppService.getAllRooms().subscribe(
+
+    data => {
+
+      this.Rooms = data ;
+
+      this.allRooms = this.Rooms.data;
+
+    }
+  )
+
+}
+
+//get previous chat of room
+public getPreviousChatOfRoom :any = (id)=>{
+  let previousData = (this.messageList.length > 0 ? this.messageList.slice() : []);
+  
+  this.SocketService.getChatroomChat(id, this.pageValue * 10)
+  .subscribe((apiResponse) => {
+
+    console.log(apiResponse);
+
+    if (apiResponse.status == 200) {
+
+      this.messageList = apiResponse.data.concat(previousData);
+
+    } else {
+
+      this.messageList = previousData;
+      this.toastr.warning('No Messages available')
+
+    }
+
+    this.loadingPreviousChat = false;
+
+  }, (err) => {
+
+    this.toastr.error('some error occured', err)
+
+
+  });
+
+}// end get previous chat with any user
+
+//chatting in a group
+public roomSelectedToChat: any = (id, name) => {
+
+  Cookie.set('roomId', id);
+
+  Cookie.set('roomName', name);
+
+  this.receiverName = name;
+  
+  this.roomId = id;
+
+  this.messageList = [];
+
+  this.pageValue = 0;
+
+  this.getPreviousChatOfRoom(id);
+
+} // end userBtnClick function
 
 
   public logout: any = () => {
@@ -319,21 +417,6 @@ export class ChatBoxComponent implements OnInit{
     this.toastr.success("You are chatting with "+name)
 
   }
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
 
 
   }
