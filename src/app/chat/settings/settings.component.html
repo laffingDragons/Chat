@@ -1,23 +1,4 @@
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          ...
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
 <div class="container">
   
   <div class="row p-0 m-0" *ngIf="info">
@@ -25,9 +6,20 @@
     <div class="col-sm">
       <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='goBack()'> ← </button>
       <br>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-          Launch demo modal
-        </button>
+
+      <div *ngIf='info.active'>
+        <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='DeletePop()'> Delete Room </button>
+  
+        <div class="alert alert-danger" role="alert" *ngIf="pop">
+          <p>This will mark chatroom room as inactive. </p>
+          <button class="btn btn-danger btn-sm" (click)='setRoomAsInactive()' >Confirm</button>
+        </div>
+      </div>
+
+      <div *ngIf='!info.active'>
+          <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='setAsActive()'>Set as Active</button>
+
+        </div>
 
     </div>
 

@@ -13,7 +13,7 @@ import { HttpErrorResponse, HttpParams } from "@angular/common/http";
 @Injectable()
 export class AppService {
 
-  public url =  'http://192.168.2.104:3000';
+  public url =  'http://localhost:3000';
 
   constructor(
     public http: HttpClient
@@ -148,6 +148,17 @@ export class AppService {
     return this.http.post(`${this.url}/api/v1/room/invite?authToken=${Cookie.get('authtoken')}`, params);
 
   } // end of signupFunction function.
+
+  // mark chatroom as inactive
+  public markAsInactive(data): Observable<any> {
+
+    const params = new HttpParams()
+      .set('roomId', data.roomId)
+      .set('active', data.active);
+
+    return this.http.put(`${this.url}/api/v1/room/${data.roomId}/edit?authToken=${Cookie.get('authtoken')}`, params);
+
+  } // end of signinFunction function.
   
 
   private handleError(err: HttpErrorResponse) {

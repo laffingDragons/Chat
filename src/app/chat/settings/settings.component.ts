@@ -25,6 +25,8 @@ export class SettingsComponent implements OnInit {
   public invitation:string;
   public mail : string;
 
+  public pop: boolean = false;
+      
   constructor(public router: Router, private location: Location, private _route: ActivatedRoute, private appService:AppService, private socketService:SocketService,private toastr: ToastsManager, vcr: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vcr);
    }
@@ -161,10 +163,75 @@ export class SettingsComponent implements OnInit {
     }
 
 
+    // Alert to delete the room
+    DeletePop(){
+
+      this.pop = true;
+
+      setTimeout(() => {
+
+        this.pop = false;
+
+      }, 5000);
+
+
+    }
+
     // set room as inactive
     setRoomAsInactive(){
 
       console.log('room :', this.roomId);
+      let roomObj ={
+        roomId: this.roomId,
+        active: false
+      }
+
+      this.appService.markAsInactive(roomObj).subscribe(
+        data=>{
+
+          let response = data['message'];
+
+          this.toastr.success(`Room set as Inactive`);
+
+          setTimeout(() => {
+            this.router.navigate(['/chat']);
+          }, 1000);
+        }
+      ),
+      error => {
+
+        console.log("Some error occured", error.errorMessage);
+
+      }
+
+    }
+
+    setAsActive(){
+
+      console.log('room :', this.roomId);
+      let roomObj ={
+        roomId: this.roomId,
+        active: true
+      }
+
+      this.appService.markAsInactive(roomObj).subscribe(
+        data=>{
+
+          let response = data['message'];
+
+          this.toastr.success(`Room set as Active`);
+
+          setTimeout(() => {
+            this.router.navigate(['/chat']);
+          }, 1000);
+        }
+      ),
+      error => {
+
+        console.log("Some error occured", error.errorMessage);
+
+      }
+
     }
 
   goBack () {

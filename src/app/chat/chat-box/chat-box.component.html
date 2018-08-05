@@ -70,8 +70,10 @@
                         Chatrooms :
                     </li>
                     <li class="clearfix cursorPointer" *ngFor='let chatroom of allRooms' (click)='roomSelectedToChat(chatroom.roomId, chatroom.roomName)'>
-                        <div class="userPresence" *ngIf="userId == chatroom.admin || chatroom.members.includes(userId)">
-                        <user-details [userFirstName]="chatroom.roomName" [userLastName]="''" ></user-details>
+                        <div *ngIf='chatroom.active'>
+                            <div class="userPresence" *ngIf="userId == chatroom.admin || chatroom.members.includes(userId)">
+                            <user-details [userFirstName]="chatroom.roomName" [userLastName]="''" ></user-details>
+                        </div>
                        </div>
                     </li>
                 </ul>
