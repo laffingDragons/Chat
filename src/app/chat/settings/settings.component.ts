@@ -4,6 +4,7 @@ import { Router, ActivatedRoute  } from "@angular/router";
 import { AppService } from "./../../app.service";
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { SocketService } from './../../socket.service';
+import { filter } from '../../../../node_modules/rxjs/operator/filter';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class SettingsComponent implements OnInit {
   public mail : string;
 
   public pop: boolean = false;
+  public leavePop: boolean = false;
       
   constructor(public router: Router, private location: Location, private _route: ActivatedRoute, private appService:AppService, private socketService:SocketService,private toastr: ToastsManager, vcr: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vcr);
@@ -76,6 +78,7 @@ export class SettingsComponent implements OnInit {
         this.users = this.users.filter(user => {
           return user.userId != this.userId
         })
+
       },
       error => {
         console.log("Some error occured", error.errorMessage);
@@ -96,16 +99,61 @@ export class SettingsComponent implements OnInit {
 
       checkedRoles.map(cR => {
 
+          // Getting all the checked value
           this.userArray.push(cR.userId);
-
+          
+          // pushing unique value in info.members array
           this.info.members = Array.from(new Set(this.userArray))
 
       })
 
 
-      console.log(this.info);
-    
+      // checking for users who have requestes and if they are checked in select member then remove them from requested
+      for(let x of this.info.members){
+        for(let y of this.info.requested){
+          if(x === y){
+
+            this.info.requested.splice( this.info.requested.indexOf(x), 1 );
+
+          }
+        }
+      }
+
+    console.log(this.info);
       
+    this.appService.editRoom(this.info).subscribe(
+      data => {
+        let response = data['message'];
+
+        this.toastr.success(response);
+
+      }
+    ),
+    error => {
+
+      console.log("Some error occured", error.errorMessage);
+
+    }
+
+    this.appService.addUserToRoom(this.info).subscribe(
+      data => {
+        let response = data['message'];
+
+        this.toastr.success(response);
+
+        setTimeout(() => {
+
+          this.router.navigate(['/chat']);
+
+        }, 1000);
+      }
+    ),
+    error => {
+
+      console.log("Some error occured", error.errorMessage);
+
+    }
+    
     }else{
 
       this.toastr.error('Plzz enter a Chatroom name')
@@ -208,7 +256,7 @@ export class SettingsComponent implements OnInit {
 
     setAsActive(){
 
-      console.log('room :', this.roomId);
+      
       let roomObj ={
         roomId: this.roomId,
         active: true
@@ -232,6 +280,48 @@ export class SettingsComponent implements OnInit {
 
       }
 
+    }
+
+    // leave room popup
+    leaveRoomPop(){
+      this.leavePop = true;
+
+      setTimeout(() => {
+
+        this.leavePop = false;
+
+      }, 5000);
+
+    }
+
+    //leave room function
+    leaveRoom(){
+
+     
+      let roomObj ={
+        roomId: this.roomId,
+        members: this.userId
+      }
+
+      this.appService.removeUser(roomObj).subscribe(
+        data=>{
+
+          let response = data['message'];
+
+          this.toastr.success(response);
+
+          setTimeout(() => {
+
+            this.router.navigate(['/chat']);
+
+          }, 1000);
+        }
+      ),
+      error => {
+
+        console.log("Some error occured", error.errorMessage);
+
+      }
     }
 
   goBack () {

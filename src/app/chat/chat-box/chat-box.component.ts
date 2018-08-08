@@ -76,14 +76,18 @@ export class ChatBoxComponent implements OnInit{
     this.checkStatus();
 
     this.verifyUserConfirmation();
+
     this.getOnlineUserList();
 
-    this.getMessageFromAUser()
+    this.getMessageFromAUser();
+
+    this.getMessageFromARoom();
 
     this.getAllRooms();
 
+    this.checkForInvite();
 
-  }
+    }
 
 
   public checkStatus: any = () => {
@@ -117,9 +121,9 @@ export class ChatBoxComponent implements OnInit{
     }
   
   public getOnlineUserList :any =()=>{
-
+    
     this.SocketService.onlineUserList()
-      .subscribe((userList) => {
+    .subscribe((userList) => {
 
         this.userList = [];
 
@@ -131,9 +135,10 @@ export class ChatBoxComponent implements OnInit{
 
         }
         
-        console.log(this.userList);
+        console.log('UserList =>',this.userList);
 
       }); // end online-user-list
+     
   }
 
   // chat related methods 
@@ -155,9 +160,6 @@ export class ChatBoxComponent implements OnInit{
 
         this.messageList = previousData;
         this.toastr.warning('No Messages available')
-
-       
-
       }
 
       this.loadingPreviousChat = false;
@@ -238,7 +240,7 @@ export class ChatBoxComponent implements OnInit{
 
   public sendMessage: any = () => {
 
-    if(Cookie.get('roomId')){
+    if(this.gearIcon){
 
       if(this.messageText){
   
@@ -250,13 +252,12 @@ export class ChatBoxComponent implements OnInit{
           createdOn: new Date()
         } // end chatMsgObject
         console.log(chatMsgObject);
-        this.SocketService.SendChatMessage(chatMsgObject)
+        this.SocketService.SendChatroomMessage(chatMsgObject)
         this.pushToChatWindow(chatMsgObject)
   
       }
       else{
         this.toastr.warning('text message can not be empty')
-  
       }
 
     }else{
@@ -297,10 +298,9 @@ export class ChatBoxComponent implements OnInit{
   }// end push to chat window
 
   public getMessageFromAUser :any =()=>{
-
-      this.SocketService.chatByUserId(this.userInfo.userId)
-      .subscribe((data)=>{
-       
+    
+    this.SocketService.chatByUserId(this.userInfo.userId)
+    .subscribe((data)=>{
 
         (this.receiverId==data.senderId)?this.messageList.push(data):'';
 
@@ -362,6 +362,22 @@ public getPreviousChatOfRoom :any = (id)=>{
 
 }// end get previous chat with any user
 
+public getMessageFromARoom :any =()=>{
+  
+  this.SocketService.chatByRoomId(this.roomId)
+  .subscribe((data)=>{
+    console.log('>>>>>>>', data);
+    
+    (this.roomId==data.chatRoom)?this.messageList.push(data):'';
+
+    this.toastr.success(`${data.senderName} says : ${data.message}`)
+
+    this.scrollToChatTop=false;
+
+  });//end subscribe
+
+}// end get message from a user 
+
 //chatting in a group
 public roomSelectedToChat: any = (id, name) => {
 
@@ -381,7 +397,40 @@ public roomSelectedToChat: any = (id, name) => {
 
   this.getPreviousChatOfRoom(id);
 
+  this.SocketService.subscribeToRoom(id)
 } // end userBtnClick function
+
+
+checkForInvite(){
+  if(this.userInfo.roomId){
+
+    let roomObj ={
+      roomId: this.userInfo.roomId,
+      members: this.userInfo.userId
+    }
+    
+    this.AppService.addUserToRoom(roomObj).subscribe(
+      data => {
+        let response = data['message'];
+
+        this.toastr.success('You have been successfully added to the Room');
+
+        let localStorageDetails= this.AppService.getUserInfoFromLocalstorage();
+
+        localStorageDetails.roomId = '';
+        
+        this.AppService.setUserInfoInLocalStorage(localStorageDetails);
+
+        this.getAllRooms();
+
+      }
+    ), (err) => {
+
+    this.toastr.error('some error occured', err)
+
+  }
+  }
+}
 
 
   public logout: any = () => {

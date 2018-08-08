@@ -35,11 +35,11 @@ export class LoginComponent implements OnInit {
      let userInfo = this.appService.getUserInfoFromLocalstorage() // code to check wether user has already login .
 
     //code to redirect user to chat screen if they has been already verify
-     if(userInfo.userId){
+    //  if(userInfo.userId){
 
-      this.router.navigate(['/chat']);
+    //   this.router.navigate(['/chat']);
 
-     }
+    //  }
     
   }
 

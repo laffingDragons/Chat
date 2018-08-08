@@ -33,7 +33,7 @@
                                 </div>
                             </li>
                             <li></li>
-                        </ul>      
+                        </ul>
                     </div>
 
                 </nav>
@@ -66,17 +66,17 @@
             </ul>
 
             <ul class="list scrollables">
-                    <li class="p-2 typeOfChats">
-                        Chatrooms :
-                    </li>
-                    <li class="clearfix cursorPointer" *ngFor='let chatroom of allRooms' (click)='roomSelectedToChat(chatroom.roomId, chatroom.roomName)'>
-                        <div *ngIf='chatroom.active'>
-                            <div class="userPresence" *ngIf="userId == chatroom.admin || chatroom.members.includes(userId)">
-                            <user-details [userFirstName]="chatroom.roomName" [userLastName]="''" ></user-details>
+                <li class="p-2 typeOfChats">
+                    Chatrooms :
+                </li>
+                <li class="clearfix cursorPointer" *ngFor='let chatroom of allRooms' (click)='roomSelectedToChat(chatroom.roomId, chatroom.roomName)'>
+                    <div *ngIf='chatroom.active'>
+                        <div class="userPresence" *ngIf="userId == chatroom.admin || chatroom.members.includes(userId)">
+                            <user-details [userFirstName]="chatroom.roomName" [userLastName]="''"></user-details>
                         </div>
-                       </div>
-                    </li>
-                </ul>
+                    </div>
+                </li>
+            </ul>
 
         </div>
 
@@ -85,14 +85,16 @@
                 <first-char [name]="receiverName" [userBg]="'green'" [userColor]="'white'" (notify)="showUserName($event)"></first-char>
 
                 <div class="chat-about">
-                    <div class="chat-with">{{receiverName}}</div> 
+                    <div class="chat-with">{{receiverName}}</div>
                 </div>
-                <span *ngIf='gearIcon' class="floatLeft cursorPointer"><img src="./../../../assets/gear-icon.png" width="26px"  alt="settings" [routerLink]="['/settings',roomId]"></span>
-                    <button class="btn btn-success btn-sm float-right " [routerLink]="['/create-chatroom']">Create Chat Room</button>
-                    <br>
-                    <br>
-                    <button class="btn btn-warning btn-sm float-right " [routerLink]="['/all-chatroom']">All Chat Room</button>
-                
+                <span *ngIf='gearIcon' class="floatLeft cursorPointer">
+                    <img src="./../../../assets/gear-icon.png" width="26px" alt="settings" [routerLink]="['/settings',roomId]">
+                </span>
+                <button class="btn btn-success btn-sm float-right " [routerLink]="['/create-chatroom']">Create Chat Room</button>
+                <br>
+                <br>
+                <button class="btn btn-warning btn-sm float-right " [routerLink]="['/all-chatroom']">All Chat Room</button>
+
             </div>
             <!-- end chat-header -->
 
@@ -112,7 +114,7 @@
                         <div class="message-data" [ngClass]="{'align-right': message.senderId == userInfo.userId}">
                             <span class="message-data-time">{{message?.createdOn | date: 'medium' }}</span> &nbsp; &nbsp;
                             <span class="message-data-name floatLeft" *ngIf="message.senderId != userInfo.userId">
-                                 {{ message?.senderName }}</span>
+                                {{ message?.senderName }}</span>
                             <span class="message-data-name" *ngIf="message.senderId == userInfo.userId">{{ message?.senderName }}</span>
                             <i class="fa fa-circle me" *ngIf="message.senderId == userInfo.userId"></i>
                         </div>

@@ -1,26 +1,35 @@
+<div class="container" *ngIf="info">
 
-<div class="container">
-  
-  <div class="row p-0 m-0" *ngIf="info">
+  <div class="row p-0 m-0">
 
     <div class="col-sm">
       <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='goBack()'> ← </button>
       <br>
 
-      <div *ngIf='info.active'>
+      <!-- button to mark room as inactive -->
+      <div *ngIf='info.active && userId == info.admin'>
         <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='DeletePop()'> Delete Room </button>
-  
+
         <div class="alert alert-danger" role="alert" *ngIf="pop">
           <p>This will mark chatroom room as inactive. </p>
-          <button class="btn btn-danger btn-sm" (click)='setRoomAsInactive()' >Confirm</button>
+          <button class="btn btn-danger btn-sm" (click)='setRoomAsInactive()'>Confirm</button>
         </div>
       </div>
 
+      <!-- button to mark room as active -->
       <div *ngIf='!info.active'>
-          <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='setAsActive()'>Set as Active</button>
+        <button class="btn btn-success btn-sm" style="margin-top:60px" (click)='setAsActive()'>Set as Active</button>
 
+      </div>
+
+      <!-- button to leave the leave the room -->
+      <div *ngIf='userId !== info.admin'>
+        <button class="btn btn-warning btn-sm" style="margin-top:20px" (click)='leaveRoomPop()'>Leave Room</button>
+        <div class="alert alert-warning" role="alert" *ngIf="leavePop">
+          <p>Are you sure you want to leave this Room?</p>
+          <button class="btn btn-danger btn-sm" (click)='leaveRoom()'>Confirm</button>
         </div>
-
+      </div>
     </div>
 
     <div class="col-sm p-5">
@@ -46,11 +55,13 @@
       <h4> Select Members</h4>
       <div class="fixed-height">
         <div *ngFor="let user of users">
-          <label>
-            <input type="checkbox" value="{{user.userId}}" [(ngModel)]="user.Checked" [name]="user.firstName" [attr.disabled]="user.userId==1 ? true : null"
-            />
-            <span innerHTML="{{user.firstName}}"></span>
-          </label>
+          <div *ngIf='!info.members.includes(user.userId)'>
+            <label>
+              <input type="checkbox" value="{{user.userId}}" [(ngModel)]="user.Checked" [name]="user.firstName" [attr.disabled]="user.userId==1 ? true : null"
+              />
+              <span innerHTML="{{user.firstName}}"></span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -58,19 +69,19 @@
   </div>
   <hr>
   <br>
-      <div class="row">
-          <div class="col-sm p-5">
-        <h3 class="d-block">Invitaion</h3>
-  
-        <span>Enter Email to send Invitaion link</span>
-        <br>
-        <label for="inputFirstName" class="sr-only">Chatroom Name</label>
-  
-        <input type="text" id="Invitaion-email" class="form-control" [(ngModel)]=mail placeholder="Email" required>
-  
-        <button class="btn btn-lg btn-success btn-sm" (click)='sendInvitationMail()' >Send invite</button>&nbsp;&nbsp;
-        
-        <button title={{invitation}} class="btn btn-lg btn-success btn-sm" (click)="copyMessage(invitation)" value='click to copy'>Copy Link to Clipboard</button>
-      </div>
-      </div>
+  <div class="row">
+    <div class="col-sm p-5">
+      <h3 class="d-block">Invitaion</h3>
+
+      <span>Enter Email to send Invitaion link</span>
+      <br>
+      <label for="inputFirstName" class="sr-only">Chatroom Name</label>
+
+      <input type="text" id="Invitaion-email" class="form-control" [(ngModel)]=mail placeholder="Email" required>
+
+      <button class="btn btn-lg btn-success btn-sm" (click)='sendInvitationMail()'>Send invite</button>&nbsp;&nbsp;
+
+      <button title={{invitation}} class="btn btn-lg btn-success btn-sm" (click)="copyMessage(invitation)" value='click to copy'>Copy Link to Clipboard</button>
+    </div>
+  </div>
 </div>

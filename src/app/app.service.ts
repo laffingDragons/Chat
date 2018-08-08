@@ -131,7 +131,7 @@ export class AppService {
     const params = new HttpParams()
       .set('requested', userId)
       
-    return this.http.put(`${this.url}/api/v1/room/${roomId}`, params);
+    return this.http.put(`${this.url}/api/v1/room/${roomId}/request`, params);
 
   }
 
@@ -153,13 +153,43 @@ export class AppService {
   public markAsInactive(data): Observable<any> {
 
     const params = new HttpParams()
-      .set('roomId', data.roomId)
-      .set('active', data.active);
+      .set('active', data.active)
 
     return this.http.put(`${this.url}/api/v1/room/${data.roomId}/edit?authToken=${Cookie.get('authtoken')}`, params);
 
-  } // end of signinFunction function.
+  } // end of setting room active function.
+
+  //adding invited user to room
+  public addUserToRoom(data): Observable<any> {
+
+    const params = new HttpParams()
+      .set('members', data.members)
+
+    return this.http.put(`${this.url}/api/v1/room/${data.roomId}/addUserToRoom?authToken=${Cookie.get('authtoken')}`, params);
+
+  }
+
+  //adding invited user to room
+  public removeUser(data): Observable<any> {
+
+    const params = new HttpParams()
+      .set('members', data.members)
+
+    return this.http.put(`${this.url}/api/v1/room/${data.roomId}/removeUser?authToken=${Cookie.get('authtoken')}`, params);
+
+  }
   
+  // api call to edit the room
+  public editRoom(data): Observable<any> {
+
+    const params = new HttpParams()
+      .set('members', data.members)
+      .set('roomName', data.roomName)
+      .set('requested', data.requested)
+    
+    return this.http.put(`${this.url}/api/v1/room/${data.roomId}/editRoomName?authToken=${Cookie.get('authtoken')}`, params);
+
+  } // end of editting room function.
 
   private handleError(err: HttpErrorResponse) {
 

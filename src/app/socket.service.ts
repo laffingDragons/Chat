@@ -44,11 +44,11 @@ export class SocketService {
   } // end verifyUser
 
   public onlineUserList = () => {
-
+    
     return Observable.create((observer) => {
 
       this.socket.on("online-user-list", (userList) => {
-
+      
         observer.next(userList);
 
       }); // end Socket
@@ -129,19 +129,46 @@ export class SocketService {
 
   } // end chatByUserId
 
+
+  public chatByRoomId = (roomId) => {
+
+    return Observable.create((observer) => {
+      
+      this.socket.on('room-msg', (data) => {
+        
+        observer.next(data);
+
+      }); // end Socket
+
+    }); // end Observable
+
+  } // end chatByRoomId
+
+
   public SendChatMessage = (chatMsgObject) => {
 
     this.socket.emit('chat-msg', chatMsgObject);
 
   } // end getChatMessage
 
-  public CreateRoom = (roomObject) => {
-    console.log('roomOBJ',roomObject);
-    
+  public SendChatroomMessage = (chatMsgObject) => {
 
+    this.socket.emit('chatroom-msg', chatMsgObject);
+
+  } // end getChatMessage
+
+  public CreateRoom = (roomObject) => {
+   
     this.socket.emit('create-room', roomObject);
 
   } // end getChatMessage
+
+  // subscribe to a room
+  public subscribeToRoom = (roomId) => {
+
+    this.socket.emit('subscribe-room', roomId);
+
+  }
 
   public exitSocket = () =>{
 
@@ -151,14 +178,6 @@ export class SocketService {
 
   }// end exit socket
 
-
-  //create chat room
-
-  public CreateChatroom = (roomObject) => {
-
-    this.socket.emit('create-room', roomObject);
-
-  }// end create room
 
   private handleError(err: HttpErrorResponse) {
 
