@@ -405,3 +405,26 @@ input, button, select, optgroup, textarea {
     height: 200px;
     overflow-y: scroll;
 }
+.notification{
+    width: 30%;
+    font-size: 0.6em;
+    padding: 5px;
+}
+
+.notification-add{
+    width: 50%;
+    font-size: 0.7em;
+    padding: 5px;
+}
+
+.add-button{
+    font-size: xx-small !important;
+    padding: 3px !important;
+}
+.little-button{
+    font-size: xx-small !important;
+    padding: 5px !important;
+}
+.resize-font{
+    font-size: 0.7em;
+}

@@ -7,6 +7,6 @@ export interface ChatMessage {
     receiverId: string,
     receiverName:string,
     senderId: string,
-    senderName: string
+    senderName: string,
     
 }

@@ -169,13 +169,23 @@ export class AppService {
 
   }
 
-  //adding invited user to room
+  //removing user From room
   public removeUser(data): Observable<any> {
 
     const params = new HttpParams()
       .set('members', data.members)
 
     return this.http.put(`${this.url}/api/v1/room/${data.roomId}/removeUser?authToken=${Cookie.get('authtoken')}`, params);
+
+  }
+
+  //Removing user from request
+  public removeUserFromRequested(data): Observable<any> {
+
+    const params = new HttpParams()
+      .set('requested', data.requested)
+
+    return this.http.put(`${this.url}/api/v1/room/${data.roomId}/removeUserFromRequested?authToken=${Cookie.get('authtoken')}`, params);
 
   }
   

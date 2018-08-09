@@ -159,13 +159,13 @@ ul {
         padding-left: 0 !important;
     }
     .displayNoneMobile {
-        display: none;
+        display: none !important;
     }
     .displayBlockMobile {
-        display: block;
+        display: block !important;
     }
     .sendBoxStyle {
-        bottom: auto;
+        bottom: auto !important;
     }
     .noPadMob {
         padding: 0 !important;

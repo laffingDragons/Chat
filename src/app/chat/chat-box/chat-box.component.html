@@ -69,7 +69,7 @@
                 <li class="p-2 typeOfChats">
                     Chatrooms :
                 </li>
-                <li class="clearfix cursorPointer" *ngFor='let chatroom of allRooms' (click)='roomSelectedToChat(chatroom.roomId, chatroom.roomName)'>
+                <li class="clearfix cursorPointer" *ngFor='let chatroom of allRooms' (click)='roomSelectedToChat(chatroom.roomId, chatroom.roomName, chatroom.requested)'>
                     <div *ngIf='chatroom.active'>
                         <div class="userPresence" *ngIf="userId == chatroom.admin || chatroom.members.includes(userId)">
                             <user-details [userFirstName]="chatroom.roomName" [userLastName]="''"></user-details>
@@ -86,14 +86,15 @@
 
                 <div class="chat-about">
                     <div class="chat-with">{{receiverName}}</div>
+                    <p class="resize-font" *ngIf="typing && typingUserId === receiverId">{{ typingUserName }} is typing...</p>
                 </div>
                 <span *ngIf='gearIcon' class="floatLeft cursorPointer">
                     <img src="./../../../assets/gear-icon.png" width="26px" alt="settings" [routerLink]="['/settings',roomId]">
                 </span>
-                <button class="btn btn-success btn-sm float-right " [routerLink]="['/create-chatroom']">Create Chat Room</button>
+                <button class="btn btn-success little-button float-right " [routerLink]="['/create-chatroom']">Create Chat Room</button>
                 <br>
                 <br>
-                <button class="btn btn-warning btn-sm float-right " [routerLink]="['/all-chatroom']">All Chat Room</button>
+                <button class="btn btn-warning little-button float-right " [routerLink]="['/all-chatroom']">All Chat Room</button>
 
             </div>
             <!-- end chat-header -->
@@ -111,15 +112,23 @@
 
                     </li>
                     <li class="clearfix" *ngFor="let message of messageList">
-                        <div class="message-data" [ngClass]="{'align-right': message.senderId == userInfo.userId}">
-                            <span class="message-data-time">{{message?.createdOn | date: 'medium' }}</span> &nbsp; &nbsp;
-                            <span class="message-data-name floatLeft" *ngIf="message.senderId != userInfo.userId">
-                                {{ message?.senderName }}</span>
-                            <span class="message-data-name" *ngIf="message.senderId == userInfo.userId">{{ message?.senderName }}</span>
-                            <i class="fa fa-circle me" *ngIf="message.senderId == userInfo.userId"></i>
+                        <div *ngIf='message.senderId'>
+                            <div class="message-data" [ngClass]="{'align-right': message.senderId == userInfo.userId}">
+                                <span class="message-data-time">{{message?.createdOn | date: 'medium' }}</span> &nbsp; &nbsp;
+                                <span class="message-data-name floatLeft" *ngIf="message.senderId != userInfo.userId">
+                                    {{ message?.senderName }}</span>
+                                <span class="message-data-name" *ngIf="message.senderId == userInfo.userId">{{ message?.senderName }}</span>
+                                <i class="fa fa-circle me" *ngIf="message.senderId == userInfo.userId"></i>
+                            </div>
+                            <div class="message" [ngClass]="{'float-right other-message': message.senderId == userInfo.userId, 'my-message': message.senderId != userInfo.userId}">
+                                {{message?.message | removeSpecialCharPipe: '#' | removeSpecialCharPipe: '$'}}
+                            </div>
                         </div>
-                        <div class="message" [ngClass]="{'float-right other-message': message.senderId == userInfo.userId, 'my-message': message.senderId != userInfo.userId}">
-                            {{message?.message | removeSpecialCharPipe: '#' | removeSpecialCharPipe: '$'}}
+                        <div *ngIf='!message.senderId && message.createdOn' class="alert alert-info notification mx-auto" role="alert">
+                           <p class="text-center" style="margin-bottom: 0px"> {{message.message}}</p>
+                        </div>
+                        <div *ngIf='!message.senderId && !message.createdOn' class="alert alert-success notification-add mx-auto" role="success" >
+                             <p class="text-center" style="margin-bottom: 0px">{{message.message}}</p> <button (click)='addUserToRoom(message.userId, message.name)' class="btn btn-success add-button">Add</button><button (click)='removeFromRequest(message.userId)' class="btn btn-warning add-button float-right">Decline</button>
                         </div>
                     </li>
 

@@ -55,7 +55,7 @@
       <h4> Select Members</h4>
       <div class="fixed-height">
         <div *ngFor="let user of users">
-          <div *ngIf='!info.members.includes(user.userId)'>
+          <div *ngIf='!info.members.includes(user.userId) && user.userId !== info.admin'>
             <label>
               <input type="checkbox" value="{{user.userId}}" [(ngModel)]="user.Checked" [name]="user.firstName" [attr.disabled]="user.userId==1 ? true : null"
               />

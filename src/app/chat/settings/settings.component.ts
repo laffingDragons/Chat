@@ -5,6 +5,8 @@ import { AppService } from "./../../app.service";
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { SocketService } from './../../socket.service';
 import { filter } from '../../../../node_modules/rxjs/operator/filter';
+import { Cookie } from 'ng2-cookies/ng2-cookies';
+
 
 
 @Component({
@@ -107,6 +109,19 @@ export class SettingsComponent implements OnInit {
 
       })
 
+      // informaing the chatroom that user has joined chatroom
+      this.userArray.map(x=> 
+      {
+        for(let user of this.users){
+          
+        if(x === user.userId){
+          
+          this.userActivityMessage(user.firstName, 'join the room')
+          
+        }
+      }
+    }
+    )
 
       // checking for users who have requestes and if they are checked in select member then remove them from requested
       for(let x of this.info.members){
@@ -145,7 +160,7 @@ export class SettingsComponent implements OnInit {
 
           this.router.navigate(['/chat']);
 
-        }, 1000);
+        }, 2000);
       }
     ),
     error => {
@@ -157,8 +172,9 @@ export class SettingsComponent implements OnInit {
     }else{
 
       this.toastr.error('Plzz enter a Chatroom name')
-
     }
+
+    
     }
 
     // Button to copy link to clipboard
@@ -303,6 +319,10 @@ export class SettingsComponent implements OnInit {
         members: this.userId
       }
 
+      let firstname = this.appService.getUserInfoFromLocalstorage().firstName;
+
+      this.userActivityMessage(firstname, 'left the Room');
+
       this.appService.removeUser(roomObj).subscribe(
         data=>{
 
@@ -314,7 +334,7 @@ export class SettingsComponent implements OnInit {
 
             this.router.navigate(['/chat']);
 
-          }, 1000);
+          }, 2000);
         }
       ),
       error => {
@@ -322,6 +342,21 @@ export class SettingsComponent implements OnInit {
         console.log("Some error occured", error.errorMessage);
 
       }
+    }
+
+    public userActivityMessage : any = (userName, message) => {
+    
+      let chatMsgObject = {
+        
+        chatRoom: this.roomId,
+        message: `${userName} ${message}`,
+        createdOn: new Date()
+        
+      } // end chatMsgObject
+  
+      console.log(chatMsgObject);
+      this.socketService.SendChatroomMessage(chatMsgObject)
+  
     }
 
   goBack () {

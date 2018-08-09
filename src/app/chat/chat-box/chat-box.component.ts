@@ -15,23 +15,24 @@ import { FirstCharComponent } from '../../shared/first-char/first-char.component
   providers: [SocketService]
 })
 
-export class ChatBoxComponent implements OnInit{
+export class ChatBoxComponent implements OnInit {
 
-  @ViewChild('scrollMe', { read: ElementRef }) 
-  
+  @ViewChild('scrollMe', { read: ElementRef })
+
   public scrollMe: ElementRef;
 
   public authToken: any;
   public userInfo: any;
   public userList: any = [];
-  public disconnectedSocket: boolean;  
+  public disconnectedSocket: boolean;
 
-  public scrollToChatTop:boolean= false;
+  public scrollToChatTop: boolean = false;
+  public typing: boolean = false;
 
   public receiverId: any;
   public receiverName: any;
   public previousChatList: any = [];
-  public messageText: any; 
+  public messageText: any;
   public messageList: any = []; // stores the current message list display in chat box
   public pageValue: number = 0;
   public loadingPreviousChat: boolean = false;
@@ -39,12 +40,16 @@ export class ChatBoxComponent implements OnInit{
   //for chatroom
   public userId: any;
   public Rooms: any;
-  public allRooms:any;
+  public allRooms: any;
   public roomName: any;
   public roomInfo: any;
   public roomId: any;
   public gearIcon: boolean = false;
 
+  //all users
+  public allUser: any;
+  public typingUserName: any;
+  public typingUserId: any;
   constructor(
     public AppService: AppService,
     public SocketService: SocketService,
@@ -65,12 +70,12 @@ export class ChatBoxComponent implements OnInit{
 
     this.receiverId = Cookie.get("receiverId");
 
-    this.receiverName =  Cookie.get('receiverName');
+    this.receiverName = Cookie.get('receiverName');
 
-    console.log(this.receiverId,this.receiverName)
+    console.log(this.receiverId, this.receiverName)
 
-    if(this.receiverId!=null && this.receiverId!=undefined && this.receiverId!=''){
-      this.userSelectedToChat(this.receiverId,this.receiverName)
+    if (this.receiverId != null && this.receiverId != undefined && this.receiverId != '') {
+      this.userSelectedToChat(this.receiverId, this.receiverName)
     }
 
     this.checkStatus();
@@ -83,11 +88,17 @@ export class ChatBoxComponent implements OnInit{
 
     this.getMessageFromARoom();
 
-    this.getAllRooms();
-
     this.checkForInvite();
 
-    }
+    this.getAllRooms();
+
+    this.typingUser();
+
+    // delaying this on purpose to make sure the  important api are hits first
+    setTimeout(() => {
+      this.getAllUserData();
+    }, 2000);
+  }
 
 
   public checkStatus: any = () => {
@@ -118,12 +129,12 @@ export class ChatBoxComponent implements OnInit{
         this.SocketService.setUser(this.authToken);
 
       });
-    }
-  
-  public getOnlineUserList :any =()=>{
-    
+  }
+
+  public getOnlineUserList: any = () => {
+
     this.SocketService.onlineUserList()
-    .subscribe((userList) => {
+      .subscribe((userList) => {
 
         this.userList = [];
 
@@ -131,45 +142,45 @@ export class ChatBoxComponent implements OnInit{
 
           let temp = { 'userId': x, 'name': userList[x], 'unread': 0, 'chatting': false };
 
-          this.userList.push(temp);          
+          this.userList.push(temp);
 
         }
-        
-        console.log('UserList =>',this.userList);
+
+        console.log('UserList =>', this.userList);
 
       }); // end online-user-list
-     
+
   }
 
   // chat related methods 
 
 
-  public getPreviousChatWithAUser :any = ()=>{
+  public getPreviousChatWithAUser: any = () => {
     let previousData = (this.messageList.length > 0 ? this.messageList.slice() : []);
-    
+
     this.SocketService.getChat(this.userInfo.userId, this.receiverId, this.pageValue * 10)
-    .subscribe((apiResponse) => {
+      .subscribe((apiResponse) => {
 
-      console.log(apiResponse);
+        console.log(apiResponse);
 
-      if (apiResponse.status == 200) {
+        if (apiResponse.status == 200) {
 
-        this.messageList = apiResponse.data.concat(previousData);
+          this.messageList = apiResponse.data.concat(previousData);
 
-      } else {
+        } else {
 
-        this.messageList = previousData;
-        this.toastr.warning('No Messages available')
-      }
+          this.messageList = previousData;
+          this.toastr.warning('No Messages available')
+        }
 
-      this.loadingPreviousChat = false;
+        this.loadingPreviousChat = false;
 
-    }, (err) => {
+      }, (err) => {
 
-      this.toastr.error('some error occured')
+        this.toastr.error('some error occured')
 
 
-    });
+      });
 
   }// end get previous chat with any user
 
@@ -181,7 +192,7 @@ export class ChatBoxComponent implements OnInit{
     this.pageValue++;
     this.scrollToChatTop = true;
 
-    this.getPreviousChatWithAUser() 
+    this.getPreviousChatWithAUser()
 
   } // end loadPreviousChat
 
@@ -189,16 +200,16 @@ export class ChatBoxComponent implements OnInit{
 
     this.gearIcon = false;
 
-    console.log("setting user as active") 
+    console.log("setting user as active")
 
     // setting that user to chatting true   
-    this.userList.map((user)=>{
-        if(user.userId==id){
-          user.chatting=true;
-        }
-        else{
-          user.chatting = false;
-        }
+    this.userList.map((user) => {
+      if (user.userId == id) {
+        user.chatting = true;
+      }
+      else {
+        user.chatting = false;
+      }
     })
 
     Cookie.set('receiverId', id);
@@ -230,6 +241,12 @@ export class ChatBoxComponent implements OnInit{
 
   public sendMessageUsingKeypress: any = (event: any) => {
 
+    let userData = {
+      userId: this.userInfo.userId,
+      name : this.userInfo.firstName
+    }
+    this.SocketService.typing(userData)
+
     if (event.keyCode === 13) { // 13 is keycode of enter.
 
       this.sendMessage();
@@ -240,10 +257,10 @@ export class ChatBoxComponent implements OnInit{
 
   public sendMessage: any = () => {
 
-    if(this.gearIcon){
+    if (this.gearIcon) {
 
-      if(this.messageText){
-  
+      if (this.messageText) {
+
         let chatMsgObject = {
           senderName: this.userInfo.firstName + " " + this.userInfo.lastName,
           senderId: this.userInfo.userId,
@@ -254,16 +271,16 @@ export class ChatBoxComponent implements OnInit{
         console.log(chatMsgObject);
         this.SocketService.SendChatroomMessage(chatMsgObject)
         this.pushToChatWindow(chatMsgObject)
-  
+
       }
-      else{
+      else {
         this.toastr.warning('text message can not be empty')
       }
 
-    }else{
+    } else {
 
-      if(this.messageText){
-  
+      if (this.messageText) {
+
         let chatMsgObject = {
           senderName: this.userInfo.firstName + " " + this.userInfo.lastName,
           senderId: this.userInfo.userId,
@@ -275,12 +292,12 @@ export class ChatBoxComponent implements OnInit{
         console.log(chatMsgObject);
         this.SocketService.SendChatMessage(chatMsgObject)
         this.pushToChatWindow(chatMsgObject)
-        
-  
+
+
       }
-      else{
+      else {
         this.toastr.warning('text message can not be empty')
-  
+
       }
 
     }
@@ -288,149 +305,289 @@ export class ChatBoxComponent implements OnInit{
 
   } // end sendMessage
 
-  public pushToChatWindow : any =(data)=>{
+  public userActivityMessage: any = (userId) => {
 
-    this.messageText="";
+    let chatMsgObject = {
+
+      chatRoom: Cookie.get('roomId'),
+      message: `${userId} join the Room`,
+      createdOn: new Date()
+
+    } // end chatMsgObject
+
+    console.log(chatMsgObject);
+    this.SocketService.SendChatroomMessage(chatMsgObject)
+
+  }
+
+  public pushToChatWindow: any = (data) => {
+
+    this.messageText = "";
     this.messageList.push(data);
     this.scrollToChatTop = false;
 
 
   }// end push to chat window
 
-  public getMessageFromAUser :any =()=>{
-    
-    this.SocketService.chatByUserId(this.userInfo.userId)
-    .subscribe((data)=>{
+  public getMessageFromAUser: any = () => {
 
-        (this.receiverId==data.senderId)?this.messageList.push(data):'';
+    this.SocketService.chatByUserId(this.userInfo.userId)
+      .subscribe((data) => {
+
+        (this.receiverId == data.senderId) ? this.messageList.push(data) : '';
 
         this.toastr.success(`${data.senderName} says : ${data.message}`)
 
-        this.scrollToChatTop=false;
+        this.scrollToChatTop = false;
 
       });//end subscribe
 
   }// end get message from a user 
 
 
-//  get all chatrooms and find the user
-public getAllRooms = () => {
+  //  get all chatrooms and find the user
+  public getAllRooms = () => {
 
-  this.userId = this.AppService.getUserInfoFromLocalstorage().userId;
+    this.userId = this.AppService.getUserInfoFromLocalstorage().userId;
 
-  this.AppService.getAllRooms().subscribe(
+    this.AppService.getAllRooms().subscribe(
 
-    data => {
+      data => {
 
-      this.Rooms = data ;
+        this.Rooms = data;
 
-      this.allRooms = this.Rooms.data;
+        this.allRooms = this.Rooms.data;
 
-    }
-  )
+      }
+    )
 
-}
+  }
 
-//get previous chat of room
-public getPreviousChatOfRoom :any = (id)=>{
-  let previousData = (this.messageList.length > 0 ? this.messageList.slice() : []);
-  
-  this.SocketService.getChatroomChat(id, this.pageValue * 10)
-  .subscribe((apiResponse) => {
+  //get previous chat of room
+  public getPreviousChatOfRoom: any = (id) => {
+    let previousData = (this.messageList.length > 0 ? this.messageList.slice() : []);
 
-    console.log(apiResponse);
+    this.SocketService.getChatroomChat(id, this.pageValue * 10)
+      .subscribe((apiResponse) => {
 
-    if (apiResponse.status == 200) {
+        if (apiResponse.status == 200) {
 
-      this.messageList = apiResponse.data.concat(previousData);
+          this.messageList = apiResponse.data.concat(previousData);
 
-    } else {
+        } else {
 
-      this.messageList = previousData;
-      this.toastr.warning('No Messages available')
+          this.messageList = previousData;
+          this.toastr.warning('No Messages available')
 
-    }
+        }
 
-    this.loadingPreviousChat = false;
+        this.loadingPreviousChat = false;
 
-  }, (err) => {
+      }, (err) => {
 
-    this.toastr.error('some error occured', err)
+        this.toastr.error('some error occured', err)
 
 
-  });
+      });
 
-}// end get previous chat with any user
+  }// end get previous chat with any user
 
-public getMessageFromARoom :any =()=>{
-  
-  this.SocketService.chatByRoomId(this.roomId)
-  .subscribe((data)=>{
-    console.log('>>>>>>>', data);
+  public getMessageFromARoom: any = () => {
+
+    this.SocketService.chatByRoomId(this.roomId)
+      .subscribe((data) => {
+
+        (this.roomId == data.chatRoom) ? this.messageList.push(data) : '';
+
+        this.toastr.success(`${data.senderName} says in Chatroom: ${data.message}`)
+
+        this.scrollToChatTop = false;
+
+      });//end subscribe
+
+  }// end get message from a user 
+
+  //chatting in a group
+  public roomSelectedToChat: any = (id, name, requested) => {
+
+    this.gearIcon = true;
+
+    Cookie.set('roomId', id);
+
+    Cookie.set('roomName', name);
+
+    this.receiverName = name;
+
+    this.roomId = id;
+
+    this.messageList = [];
+
+    this.pageValue = 0;
+
+    this.getPreviousChatOfRoom(id);
+
+    this.SocketService.subscribeToRoom(id);
+
+
+    // on purpose delaying this function for speed
+    setTimeout(() => {
+
+      requested.map(x => {
+
+        for(let user of this.allUser){
+          if(x === user.userId){
+
+            let data = {
+              userId: user.userId,
+              name:user.firstName,
+              chatRoom: id,
+              message: `${user.firstName} wants to join chatroom`,
+            }
     
-    (this.roomId==data.chatRoom)?this.messageList.push(data):'';
+            this.pushToChatWindow(data);
 
-    this.toastr.success(`${data.senderName} says : ${data.message}`)
+          }
+        }
 
-    this.scrollToChatTop=false;
-
-  });//end subscribe
-
-}// end get message from a user 
-
-//chatting in a group
-public roomSelectedToChat: any = (id, name) => {
-
-  this.gearIcon = true;
-
-  Cookie.set('roomId', id);
-
-  Cookie.set('roomName', name);
-
-  this.receiverName = name;
-  
-  this.roomId = id;
-
-  this.messageList = [];
-
-  this.pageValue = 0;
-
-  this.getPreviousChatOfRoom(id);
-
-  this.SocketService.subscribeToRoom(id)
-} // end userBtnClick function
+      })
+    }, 500);
 
 
-checkForInvite(){
-  if(this.userInfo.roomId){
+  } // end roomSelected to chat function
 
-    let roomObj ={
-      roomId: this.userInfo.roomId,
-      members: this.userInfo.userId
-    }
+
+  //add user to chatroom
+  addUserToRoom(userId, name) {
     
-    this.AppService.addUserToRoom(roomObj).subscribe(
+    let userObj={
+      roomId: this.roomId,
+      members: userId
+    }
+
+    let userObjRemove={
+      roomId: this.roomId,
+      requested: userId
+    }
+
+    this.AppService.addUserToRoom(userObj).subscribe(
       data => {
         let response = data['message'];
 
-        this.toastr.success('You have been successfully added to the Room');
-
-        let localStorageDetails= this.AppService.getUserInfoFromLocalstorage();
-
-        localStorageDetails.roomId = '';
-        
-        this.AppService.setUserInfoInLocalStorage(localStorageDetails);
-
-        this.getAllRooms();
+        this.toastr.success(response);
 
       }
-    ), (err) => {
+    ),
+    error => {
 
-    this.toastr.error('some error occured', err)
+      console.log("Some error occured", error.errorMessage);
+
+    }
+
+    this.AppService.removeUserFromRequested(userObjRemove).subscribe(
+      data => {
+        let response = data['message'];
+
+      }
+    ),
+    error => {
+
+      console.log("Some error occured", error.errorMessage);
+
+    }
+    
+    //removing the user add confirmation from chat
+    this.userActivityMessage(name, this.roomId);
+    let result =this.messageList.filter(item => item.userId !== userId )
+    this.messageList = [];
+    this.messageList = result;
+
+
+   this.getAllRooms()
+  }
+
+  removeFromRequest(userId){
+
+    let userObjRemove={
+      roomId: this.roomId,
+      requested: userId
+    }
+
+    this.AppService.removeUserFromRequested(userObjRemove).subscribe(
+      data => {
+        let response = data['message'];
+
+        this.toastr.success(response);
+
+      }
+    ),
+    error => {
+
+      console.log("Some error occured", error.errorMessage);
+
+    }
+
+    let result =this.messageList.filter(item => item.userId !== userId )
+    this.messageList = [];
+    this.messageList = result;
+
+
+   this.getAllRooms()
 
   }
+
+
+  checkForInvite() {
+    if (this.userInfo.roomId) {
+
+      let roomObj = {
+        roomId: this.userInfo.roomId,
+        members: this.userInfo.userId
+      }
+
+      this.AppService.addUserToRoom(roomObj).subscribe(
+        data => {
+          let response = data['message'];
+
+          this.userNotifyMessage(this.userInfo.firstName, this.userInfo.roomId);
+
+          this.getAllRooms();
+
+          this.toastr.success('You have been successfully added to the Room');
+        }
+      ), (err) => {
+
+        this.toastr.error('some error occured', err)
+
+      }
+    }
+
+
+
+    let localStorageDetails = this.AppService.getUserInfoFromLocalstorage();
+
+    localStorageDetails.roomId = '';
+
+    this.AppService.setUserInfoInLocalStorage(localStorageDetails);
+
+
   }
-}
+
+
+
+  public userNotifyMessage: any = (userName, roomId) => {
+
+
+    let chatMsgObject = {
+
+      chatRoom: roomId,
+      message: `${userName} join the Room`,
+      createdOn: new Date()
+
+    } // end chatMsgObject
+
+    this.SocketService.SendChatroomMessage(chatMsgObject)
+
+  }
 
 
   public logout: any = () => {
@@ -463,13 +620,41 @@ checkForInvite(){
 
   } // end logout
 
+
+  //get all user data
+  public getAllUserData (){
+    
+      // getting all users data to map
+      this.AppService.getAllUsers().subscribe(
+        data => {
+          let response = data['data'];
+
+          this.allUser = response;
+        }
+      )
+  }
+
   // handle the output from a child component 
 
-  public showUserName =(name:string)=>{
+  public showUserName = (name: string) => {
 
-    this.toastr.success("You are chatting with "+name)
-
-  }
-
+    this.toastr.success("You are chatting with " + name)
 
   }
+
+  typingUser(){
+
+    this.SocketService.typingUser().subscribe((userData) => {
+
+      this.typing = true;
+      this.typingUserName = userData.name;
+      this.typingUserId = userData.userId; 
+      
+      setTimeout(() => {
+        this.typing= false
+      }, 2000);
+    })
+  }
+}
+
+

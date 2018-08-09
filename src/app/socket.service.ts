@@ -170,6 +170,28 @@ export class SocketService {
 
   }
 
+  // user typing event
+  public typing = (userData) => {
+
+    this.socket.emit('typing', userData);
+
+  } 
+
+  //reciving the typing event
+  public typingUser = () => {
+
+    return Observable.create((observer) => {
+      
+      this.socket.on('typing-user', (data) => {
+        
+        observer.next(data);
+
+      }); // end Socket
+
+    }); // end Observable
+
+  } // end chatByRoomId
+
   public exitSocket = () =>{
 
 
