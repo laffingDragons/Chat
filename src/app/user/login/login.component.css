@@ -1,3 +1,8 @@
 .pointer{
     cursor: pointer;
+    font-size: 0.7em;
+}
+
+a:hover{
+    color: #0069D9 !important;
 }

@@ -328,7 +328,7 @@ input, button, select, optgroup, textarea {
 
 @media only screen and (max-width:575px) {
     .chat .chat-history {
-        height: 61vh;
+        height: 60vh;
     }
 }
 
@@ -427,4 +427,57 @@ input, button, select, optgroup, textarea {
 }
 .resize-font{
     font-size: 0.7em;
+}
+.off-canvas{
+    
+        /* The image used */
+        background-image: url("./../../../assets/off.jpg");
+    
+        /* Set a specific height */
+        height: 100%; 
+        width: 100%; 
+    
+        /* Create the parallax scrolling effect */
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: fixed;
+        z-index: 99;
+    
+}
+
+.material{
+    margin: 10px;
+    -webkit-box-shadow: 3px 3px 18px 3px rgba(14,14,15,0.91) ;
+box-shadow: 3px 3px 18px 3px rgba(14,14,15,0.91) ;
+}
+
+.mobile-scroll{
+    overflow-y: scroll;
+    height: 43%;
+    padding: 0px !important;
+}
+
+.card {
+    background: #fff;
+    border-radius: 6px;
+    display: inline-block;
+    height: auto;
+    margin: 5px;
+    position: relative;
+    width: 97%;
+  }
+
+.card-5 {
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+  }
+
+.typeOfChatsMobile{
+    background: #393a41;
+    width: 100%;
+    color: white;
+    margin-bottom: 0.2em;
+    position: fixed;
+    z-index: 2;
 }

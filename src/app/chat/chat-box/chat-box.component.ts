@@ -50,6 +50,10 @@ export class ChatBoxComponent implements OnInit {
   public allUser: any;
   public typingUserName: any;
   public typingUserId: any;
+
+//style
+public offCanvas:boolean = false;
+
   constructor(
     public AppService: AppService,
     public SocketService: SocketService,
@@ -654,6 +658,15 @@ export class ChatBoxComponent implements OnInit {
         this.typing= false
       }, 2000);
     })
+  }
+
+
+  navOpen(){
+    this.offCanvas = true;
+  }
+
+  navClose(){
+    this.offCanvas =false;
   }
 }
 

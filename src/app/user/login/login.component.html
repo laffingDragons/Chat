@@ -1,28 +1,3 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-
-    <a class="navbar-brand" href="/">My Chat</a>
-
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-
-    <span class="navbar-toggler-icon"></span>
-
-  </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-        <ul class="navbar-nav">
-
-            <li class="nav-item">
-
-                <a class="nav-link" (click)="goToSignUp()">Sign-Up</a>
-
-            </li>
-
-        </ul>
-
-    </div>
-
-</nav>
 
 <div class="row p-0 m-0">
 
@@ -30,7 +5,7 @@
 
     <div class="col-sm p-5">
 
-        <h2 class="form-signin-heading">Please sign in</h2>
+        <h2 class="form-signin-heading"> Sign in</h2>
 
         <label for="inputEmail" class="sr-only">Email address</label>
 
@@ -48,6 +23,7 @@
 
         <br>
 
+        <a class="pointer" (click)="goToSignUp()">Don't have an account? Please Sign-Up</a> <br>
         <a class="pointer" (click)="forgotPassword()">Forget Password ?</a>
 
     </div>

@@ -1,3 +1,37 @@
+<div *ngIf='offCanvas' class="off-canvas">
+        <button class="btn material " (click)="logout()" (click)='navClose()' >Logout</button>
+
+    <button class="btn material float-right" type="button" (click)='navClose()'><span>← Back</span></button>
+
+    <ul class="list mobile-scroll" style="margin-top: 2px">
+        <li class="p-2 typeOfChatsMobile">
+            Online Users :
+        </li>
+        <div style="margin-top: 58px;">
+        <li class="clearfix cursorPointer card card-5" [ngClass]="{'activeChat': user.chatting == true}" *ngFor="let user of userList" (click)='navClose()' (click)="userSelectedToChat(user.userId, user.name)">
+            <div class="userPresence" *ngIf="user.userId != userInfo.userId">
+                <user-details [userFirstName]="user.name" [userLastName]="''" [userStatus]="'online'" [messageRead]="user.unread"></user-details>
+            </div>
+        </li>
+        </div>
+    </ul>
+
+    <ul class="list mobile-scroll">
+        <li class="p-2 typeOfChatsMobile">
+            Chatrooms :
+        </li>
+        <div style="margin-top: 58px;">
+            <li  class="clearfix cursorPointer card card-5" *ngFor='let chatroom of allRooms' (click)='navClose()' (click)='roomSelectedToChat(chatroom.roomId, chatroom.roomName, chatroom.requested)'>
+                <div *ngIf='chatroom.active'>
+                    <div class="userPresence" *ngIf="userId == chatroom.admin || chatroom.members.includes(userId)">
+                        <user-details [userFirstName]="chatroom.roomName" [userLastName]="''"></user-details>
+                    </div>
+                </div>
+            </li>
+        </div>
+    </ul>
+
+</div>
 <div class="container">
     <div class="row">
 
@@ -14,13 +48,13 @@
                     </a>
 
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="Toggle navigation" (click)='navOpen()'>
 
                         <span class="navbar-toggler-icon"></span>
 
                     </button>
 
-                    <div class="collapse people-list navbar-collapse" id="navbarSupportedContent">
+                    <!-- <div class="collapse people-list navbar-collapse" id="navbarSupportedContent">
 
                         <ul class="list">
                             <li class="p-2 typeOfChats">
@@ -34,7 +68,7 @@
                             </li>
                             <li></li>
                         </ul>
-                    </div>
+                    </div> -->
 
                 </nav>
 
