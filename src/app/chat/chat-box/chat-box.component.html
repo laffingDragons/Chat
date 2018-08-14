@@ -122,7 +122,8 @@
 
                 <div class="chat-about">
                     <div class="chat-with">{{receiverName}}</div>
-                    <p class="resize-font" *ngIf="typing && typingUserId === receiverId">{{ typingUserName }} is typing...</p>
+                    <p class="resize-font" *ngIf="typing && typingUserId === receiverId && typingRoomId !== roomId">{{ typingUserName }} is typing...</p>
+                    <p class="resize-font" *ngIf="typing && typingRoomId === roomId && roomId">{{ typingUserName }} is typing...</p>
                 </div>
                 <span *ngIf='gearIcon' class="floatLeft cursorPointer">
                     <img src="./../../../assets/gear-icon.png" width="26px" alt="settings" [routerLink]="['/settings',roomId]">

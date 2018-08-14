@@ -50,6 +50,7 @@ export class ChatBoxComponent implements OnInit {
   public allUser: any;
   public typingUserName: any;
   public typingUserId: any;
+  public typingRoomId:any;
 
   //style
   public offCanvas: boolean = false;
@@ -209,6 +210,9 @@ export class ChatBoxComponent implements OnInit {
         user.chatting = false;
       }
     })
+    Cookie.set('roomId', null);
+
+    Cookie.set('roomName', null);
 
     Cookie.set('receiverId', id);
 
@@ -240,9 +244,11 @@ export class ChatBoxComponent implements OnInit {
   public sendMessageUsingKeypress: any = (event: any) => {
 
     let userData = {
+      roomId: this.roomId,
       userId: this.userInfo.userId,
       name: this.userInfo.firstName
     }
+    
     this.SocketService.typing(userData)
 
     if (event.keyCode === 13) { // 13 is keycode of enter.
@@ -408,6 +414,9 @@ export class ChatBoxComponent implements OnInit {
   public roomSelectedToChat: any = (id, name, requested) => {
 
     this.gearIcon = true;
+    Cookie.set('receiverId', null);
+
+    Cookie.set('receiverName', null);
 
     Cookie.set('roomId', id);
 
@@ -644,6 +653,7 @@ export class ChatBoxComponent implements OnInit {
     this.SocketService.typingUser().subscribe((userData) => {
 
       this.typing = true;
+      this.typingRoomId = userData.roomId;
       this.typingUserName = userData.name;
       this.typingUserId = userData.userId;
 
