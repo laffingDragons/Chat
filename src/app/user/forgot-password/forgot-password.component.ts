@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { AppService } from './../../app.service';
@@ -46,31 +46,30 @@ export class ForgotPasswordComponent implements OnInit {
         email: this.email
       }
       this.appService.forgotPasswordFunction(data)
-      .subscribe((apiResponse) => {
+        .subscribe((apiResponse) => {
 
-        console.log(apiResponse)
-        if (apiResponse.status === 200) {
-          this.toastr.success(apiResponse.message) 
-          setTimeout(() => {
-            
-             this.router.navigate(['/']);
+          if (apiResponse.status === 200) {
+            this.toastr.success(apiResponse.message)
+            setTimeout(() => {
 
-           }, 2000);
+              this.router.navigate(['/']);
 
-        } else {
+            }, 2000);
 
-          this.toastr.error(apiResponse.message)
+          } else {
 
-        }
+            this.toastr.error(apiResponse.message)
 
-      }, (err) => {
-        
-        this.toastr.error('some error occured')
+          }
 
-      });
-    
+        }, (err) => {
 
-    } 
+          this.toastr.error('some error occured')
 
-  } 
+        });
+
+
+    }
+
+  }
 }

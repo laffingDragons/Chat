@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router, ActivatedRoute  } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { AppService } from "./../../app.service";
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { SocketService } from './../../socket.service';
@@ -12,13 +12,13 @@ import { SocketService } from './../../socket.service';
 })
 export class CreateChatroomComponent implements OnInit {
 
-  public allUser : any;
-  public users : any;
-  public userArray : any;
+  public allUser: any;
+  public users: any;
+  public userArray: any;
   public userId: any;
-  public roomName:string;
+  public roomName: string;
 
-  constructor(public router: Router, private location: Location, private _route: ActivatedRoute, private appService:AppService, private socketService:SocketService,private toastr: ToastsManager, vcr: ViewContainerRef) {
+  constructor(public router: Router, private location: Location, private _route: ActivatedRoute, private appService: AppService, private socketService: SocketService, private toastr: ToastsManager, vcr: ViewContainerRef) {
     this.toastr.setRootViewContainerRef(vcr);
   }
 
@@ -26,21 +26,21 @@ export class CreateChatroomComponent implements OnInit {
 
     this.getAllUser();
 
-   this.userId = this.appService.getUserInfoFromLocalstorage().userId;
-   
+    this.userId = this.appService.getUserInfoFromLocalstorage().userId;
+
 
   }
-  
+
   //get all the users 
-  public getAllUser =  () => {
-      
+  public getAllUser = () => {
+
     this.appService.getAllUsers().subscribe(
-      
+
       data => {
-        
+
         this.allUser = data;
 
-        this.users = this.allUser.data 
+        this.users = this.allUser.data
         this.users = this.users.filter(user => {
           return user.userId != this.userId
         })
@@ -50,21 +50,21 @@ export class CreateChatroomComponent implements OnInit {
       }
     )
 
-  } 
+  }
 
   chatroomSubmit() {
-    
 
-    if(this.roomName){
+
+    if (this.roomName) {
 
       // filetered list 
-      let checkedRoles = this.users.filter(x=>x.Checked === true);
+      let checkedRoles = this.users.filter(x => x.Checked === true);
 
       this.userArray = [];
 
       checkedRoles.map(cR => {
 
-          this.userArray.push(cR.userId);
+        this.userArray.push(cR.userId);
 
       })
 
@@ -75,9 +75,9 @@ export class CreateChatroomComponent implements OnInit {
         admin: this.userId
       }
 
-    // calling createRoom function and passing roomObj
+      // calling createRoom function and passing roomObj
       this.socketService.CreateRoom(roomObject);
-      
+
       this.toastr.success('Room created successfully');
 
       setTimeout(() => {
@@ -85,17 +85,17 @@ export class CreateChatroomComponent implements OnInit {
         this.router.navigate(['/chat']);
 
       }, 1000);
-      
-    }else{
+
+    } else {
 
       this.toastr.error('Plzz enter a Chatroom name')
 
     }
-    }
+  }
 
 
-    
-  goBack () {
+
+  goBack() {
     this.location.back();
   }
 

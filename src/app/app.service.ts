@@ -92,11 +92,12 @@ export class AppService {
   } // end of signinFunction function.
 
 
-  public logout(): Observable<any> {
+  public logout(data): Observable<any> {
 
     const params = new HttpParams() 
 
       .set('authToken', Cookie.get('authtoken'))
+      .set('userId', data)
 
     return this.http.post(`${this.url}/api/v1/users/logout`, params);
 

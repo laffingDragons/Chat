@@ -1,18 +1,21 @@
 <div *ngIf='offCanvas' class="off-canvas">
-        <button class="btn material " (click)="logout()" (click)='navClose()' >Logout</button>
+    <button class="btn material " (click)="logout()" (click)='navClose()'>Logout</button>
 
-    <button class="btn material float-right" type="button" (click)='navClose()'><span>← Back</span></button>
+    <button class="btn material float-right" type="button" (click)='navClose()'>
+        <span>← Back</span>
+    </button>
 
     <ul class="list mobile-scroll" style="margin-top: 2px">
         <li class="p-2 typeOfChatsMobile">
             Online Users :
         </li>
         <div style="margin-top: 58px;">
-        <li class="clearfix cursorPointer card card-5" [ngClass]="{'activeChat': user.chatting == true}" *ngFor="let user of userList" (click)='navClose()' (click)="userSelectedToChat(user.userId, user.name)">
-            <div class="userPresence" *ngIf="user.userId != userInfo.userId">
-                <user-details [userFirstName]="user.name" [userLastName]="''" [userStatus]="'online'" [messageRead]="user.unread"></user-details>
-            </div>
-        </li>
+            <li class="clearfix cursorPointer " [ngClass]="{'activeChat': user.chatting == true}" *ngFor="let user of userList" (click)='navClose()'
+                (click)="userSelectedToChat(user.userId, user.name)">
+                <div class="userPresence card card-5" *ngIf="user.userId != userInfo.userId">
+                    <user-details [userFirstName]="user.name" [userLastName]="''" [userStatus]="'online'" [messageRead]="user.unread"></user-details>
+                </div>
+            </li>
         </div>
     </ul>
 
@@ -21,9 +24,9 @@
             Chatrooms :
         </li>
         <div style="margin-top: 58px;">
-            <li  class="clearfix cursorPointer card card-5" *ngFor='let chatroom of allRooms' (click)='navClose()' (click)='roomSelectedToChat(chatroom.roomId, chatroom.roomName, chatroom.requested)'>
+            <li class="clearfix cursorPointer " *ngFor='let chatroom of allRooms' (click)='navClose()' (click)='roomSelectedToChat(chatroom.roomId, chatroom.roomName, chatroom.requested)'>
                 <div *ngIf='chatroom.active'>
-                    <div class="userPresence" *ngIf="userId == chatroom.admin || chatroom.members.includes(userId)">
+                    <div class="userPresence card card-5" *ngIf="userId == chatroom.admin || chatroom.members.includes(userId)">
                         <user-details [userFirstName]="chatroom.roomName" [userLastName]="''"></user-details>
                     </div>
                 </div>
@@ -96,7 +99,6 @@
                         <user-details [userFirstName]="user.name" [userLastName]="''" [userStatus]="'online'" [messageRead]="user.unread"></user-details>
                     </div>
                 </li>
-
             </ul>
 
             <ul class="list scrollables">
@@ -159,10 +161,12 @@
                             </div>
                         </div>
                         <div *ngIf='!message.senderId && message.createdOn' class="alert alert-info notification mx-auto" role="alert">
-                           <p class="text-center" style="margin-bottom: 0px"> {{message.message}}</p>
+                            <p class="text-center" style="margin-bottom: 0px"> {{message.message}}</p>
                         </div>
-                        <div *ngIf='!message.senderId && !message.createdOn' class="alert alert-success notification-add mx-auto" role="success" >
-                             <p class="text-center" style="margin-bottom: 0px">{{message.message}}</p> <button (click)='addUserToRoom(message.userId, message.name)' class="btn btn-success add-button">Add</button><button (click)='removeFromRequest(message.userId)' class="btn btn-warning add-button float-right">Decline</button>
+                        <div *ngIf='!message.senderId && !message.createdOn' class="alert alert-success notification-add mx-auto" role="success">
+                            <p class="text-center" style="margin-bottom: 0px">{{message.message}}</p>
+                            <button (click)='addUserToRoom(message.userId, message.name)' class="btn btn-success add-button">Add</button>
+                            <button (click)='removeFromRequest(message.userId)' class="btn btn-warning add-button float-right">Decline</button>
                         </div>
                     </li>
 

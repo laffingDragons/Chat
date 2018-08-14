@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { AppService } from './../../app.service';
@@ -32,16 +32,16 @@ export class ChangePasswordComponent implements OnInit {
 
   public validation: any = () => {
     if (this.pass1 === this.pass2) {
-        if(this.pass1.length > 6){
+      if (this.pass1.length > 6) {
 
-          return true;
+        return true;
 
-        }else{
+      } else {
 
         this.toastr.error('Please make sure your password is more than 6 character')
-          return false
-        }
-    }else{
+        return false
+      }
+    } else {
 
       this.toastr.error('Please make sure you have enter same password in both feilds')
 
@@ -61,36 +61,34 @@ export class ChangePasswordComponent implements OnInit {
     if (this.validation()) {
 
       let captureId = this._route.snapshot.paramMap.get("userId");
-      console.log('captureId :', captureId);
       let data = {
         userId: captureId,
         password: this.pass1
       }
       this.appService.changePasswordFunction(data)
-      .subscribe((apiResponse) => {
+        .subscribe((apiResponse) => {
 
-        console.log(apiResponse)
-        if (apiResponse.status === 200) {
-          this.toastr.success(apiResponse.message) 
-          setTimeout(() => {
-            
-             this.router.navigate(['/login']);
+          if (apiResponse.status === 200) {
+            this.toastr.success(apiResponse.message)
+            setTimeout(() => {
 
-           }, 2000);
+              this.router.navigate(['/login']);
 
-        } else {
+            }, 2000);
 
-          this.toastr.error(apiResponse.message)
+          } else {
 
-        }
+            this.toastr.error(apiResponse.message)
 
-      }, (err) => {
-        
-        this.toastr.error('some error occured')
+          }
 
-      });
+        }, (err) => {
 
-    } 
+          this.toastr.error('some error occured')
 
-  } 
+        });
+
+    }
+
+  }
 }

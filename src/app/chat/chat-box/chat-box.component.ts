@@ -51,8 +51,8 @@ export class ChatBoxComponent implements OnInit {
   public typingUserName: any;
   public typingUserId: any;
 
-//style
-public offCanvas:boolean = false;
+  //style
+  public offCanvas: boolean = false;
 
   constructor(
     public AppService: AppService,
@@ -62,6 +62,7 @@ public offCanvas:boolean = false;
     vcr: ViewContainerRef,
   ) {
     this.toastr.setRootViewContainerRef(vcr);
+
   }
 
 
@@ -76,19 +77,15 @@ public offCanvas:boolean = false;
 
     this.receiverName = Cookie.get('receiverName');
 
-    console.log(this.receiverId, this.receiverName)
-
-    if (this.receiverId != null && this.receiverId != undefined && this.receiverId != '') {
-      this.userSelectedToChat(this.receiverId, this.receiverName)
-    }
-
-    this.checkStatus();
-
     this.verifyUserConfirmation();
 
     this.getOnlineUserList();
 
     this.getMessageFromAUser();
+
+    if (this.receiverId != null && this.receiverId != undefined && this.receiverId != '') {
+      this.userSelectedToChat(this.receiverId, this.receiverName)
+    }
 
     this.getMessageFromARoom();
 
@@ -102,6 +99,7 @@ public offCanvas:boolean = false;
     setTimeout(() => {
       this.getAllUserData();
     }, 2000);
+
   }
 
 
@@ -135,6 +133,7 @@ public offCanvas:boolean = false;
       });
   }
 
+
   public getOnlineUserList: any = () => {
 
     this.SocketService.onlineUserList()
@@ -149,7 +148,6 @@ public offCanvas:boolean = false;
           this.userList.push(temp);
 
         }
-
         console.log('UserList =>', this.userList);
 
       }); // end online-user-list
@@ -164,8 +162,6 @@ public offCanvas:boolean = false;
 
     this.SocketService.getChat(this.userInfo.userId, this.receiverId, this.pageValue * 10)
       .subscribe((apiResponse) => {
-
-        console.log(apiResponse);
 
         if (apiResponse.status == 200) {
 
@@ -203,8 +199,6 @@ public offCanvas:boolean = false;
   public userSelectedToChat: any = (id, name) => {
 
     this.gearIcon = false;
-
-    console.log("setting user as active")
 
     // setting that user to chatting true   
     this.userList.map((user) => {
@@ -247,7 +241,7 @@ public offCanvas:boolean = false;
 
     let userData = {
       userId: this.userInfo.userId,
-      name : this.userInfo.firstName
+      name: this.userInfo.firstName
     }
     this.SocketService.typing(userData)
 
@@ -272,7 +266,7 @@ public offCanvas:boolean = false;
           message: this.messageText,
           createdOn: new Date()
         } // end chatMsgObject
-        console.log(chatMsgObject);
+
         this.SocketService.SendChatroomMessage(chatMsgObject)
         this.pushToChatWindow(chatMsgObject)
 
@@ -293,7 +287,7 @@ public offCanvas:boolean = false;
           message: this.messageText,
           createdOn: new Date()
         } // end chatMsgObject
-        console.log(chatMsgObject);
+
         this.SocketService.SendChatMessage(chatMsgObject)
         this.pushToChatWindow(chatMsgObject)
 
@@ -319,7 +313,6 @@ public offCanvas:boolean = false;
 
     } // end chatMsgObject
 
-    console.log(chatMsgObject);
     this.SocketService.SendChatroomMessage(chatMsgObject)
 
   }
@@ -438,16 +431,16 @@ public offCanvas:boolean = false;
 
       requested.map(x => {
 
-        for(let user of this.allUser){
-          if(x === user.userId){
+        for (let user of this.allUser) {
+          if (x === user.userId) {
 
             let data = {
               userId: user.userId,
-              name:user.firstName,
+              name: user.firstName,
               chatRoom: id,
               message: `${user.firstName} wants to join chatroom`,
             }
-    
+
             this.pushToChatWindow(data);
 
           }
@@ -462,13 +455,13 @@ public offCanvas:boolean = false;
 
   //add user to chatroom
   addUserToRoom(userId, name) {
-    
-    let userObj={
+
+    let userObj = {
       roomId: this.roomId,
       members: userId
     }
 
-    let userObjRemove={
+    let userObjRemove = {
       roomId: this.roomId,
       requested: userId
     }
@@ -481,11 +474,11 @@ public offCanvas:boolean = false;
 
       }
     ),
-    error => {
+      error => {
 
-      console.log("Some error occured", error.errorMessage);
+        console.log("Some error occured", error.errorMessage);
 
-    }
+      }
 
     this.AppService.removeUserFromRequested(userObjRemove).subscribe(
       data => {
@@ -493,25 +486,25 @@ public offCanvas:boolean = false;
 
       }
     ),
-    error => {
+      error => {
 
-      console.log("Some error occured", error.errorMessage);
+        console.log("Some error occured", error.errorMessage);
 
-    }
-    
+      }
+
     //removing the user add confirmation from chat
     this.userActivityMessage(name, this.roomId);
-    let result =this.messageList.filter(item => item.userId !== userId )
+    let result = this.messageList.filter(item => item.userId !== userId)
     this.messageList = [];
     this.messageList = result;
 
 
-   this.getAllRooms()
+    this.getAllRooms()
   }
 
-  removeFromRequest(userId){
+  removeFromRequest(userId) {
 
-    let userObjRemove={
+    let userObjRemove = {
       roomId: this.roomId,
       requested: userId
     }
@@ -524,18 +517,18 @@ public offCanvas:boolean = false;
 
       }
     ),
-    error => {
+      error => {
 
-      console.log("Some error occured", error.errorMessage);
+        console.log("Some error occured", error.errorMessage);
 
-    }
+      }
 
-    let result =this.messageList.filter(item => item.userId !== userId )
+    let result = this.messageList.filter(item => item.userId !== userId)
     this.messageList = [];
     this.messageList = result;
 
 
-   this.getAllRooms()
+    this.getAllRooms()
 
   }
 
@@ -596,11 +589,11 @@ public offCanvas:boolean = false;
 
   public logout: any = () => {
 
-    this.AppService.logout()
+    this.AppService.logout(this.userId)
       .subscribe((apiResponse) => {
 
         if (apiResponse.status === 200) {
-          console.log("logout called")
+
           Cookie.delete('authtoken');
 
           Cookie.delete('receiverId');
@@ -626,16 +619,16 @@ public offCanvas:boolean = false;
 
 
   //get all user data
-  public getAllUserData (){
-    
-      // getting all users data to map
-      this.AppService.getAllUsers().subscribe(
-        data => {
-          let response = data['data'];
+  public getAllUserData() {
 
-          this.allUser = response;
-        }
-      )
+    // getting all users data to map
+    this.AppService.getAllUsers().subscribe(
+      data => {
+        let response = data['data'];
+
+        this.allUser = response;
+      }
+    )
   }
 
   // handle the output from a child component 
@@ -646,27 +639,27 @@ public offCanvas:boolean = false;
 
   }
 
-  typingUser(){
+  typingUser() {
 
     this.SocketService.typingUser().subscribe((userData) => {
 
       this.typing = true;
       this.typingUserName = userData.name;
-      this.typingUserId = userData.userId; 
-      
+      this.typingUserId = userData.userId;
+
       setTimeout(() => {
-        this.typing= false
+        this.typing = false
       }, 2000);
     })
   }
 
 
-  navOpen(){
+  navOpen() {
     this.offCanvas = true;
   }
 
-  navClose(){
-    this.offCanvas =false;
+  navClose() {
+    this.offCanvas = false;
   }
 }
 

@@ -28,7 +28,6 @@ export class FirstCharComponent implements OnInit,OnChanges {
 
   ngOnChanges(changes: SimpleChanges){
     let name  = changes.name;
-    console.log("changes",  changes);
     this._name = name.currentValue;
     this.firstChar = this._name[0];
   }

@@ -26,14 +26,15 @@
 
     <h4> Select Members</h4>
     <div class="fixed-height">
-        <div *ngFor="let user of users">
-            <label>
-            <input type="checkbox" value="{{user.userId}}" [(ngModel)]="user.Checked" [name]="user.firstName" [attr.disabled]="user.userId==1 ? true : null" />
-            <span innerHTML="{{user.firstName}}"></span>
+      <div *ngFor="let user of users">
+        <label>
+          <input type="checkbox" value="{{user.userId}}" [(ngModel)]="user.Checked" [name]="user.firstName" [attr.disabled]="user.userId==1 ? true : null"
+          />
+          <span innerHTML="{{user.firstName}}"></span>
         </label>
-        </div>
       </div>
-      
     </div>
+
+  </div>
 
 </div>

@@ -13,11 +13,12 @@
         <span>
           <h4 class="d-inline">{{chatroom.roomName}}</h4>
           <span *ngIf='chatroom.active' class="dot-green"></span>
-          <span *ngIf='!chatroom.active' class="dot-red" ></span>
+          <span *ngIf='!chatroom.active' class="dot-red"></span>
         </span>
 
         <!-- this button will seen when user room is active and the user is not admin  or member or requested for room -->
-        <p *ngIf='chatroom.active && userId != chatroom.admin && !chatroom.requested.includes(userId) && !chatroom.members.includes(userId)' class="float-right">
+        <p *ngIf='chatroom.active && userId != chatroom.admin && !chatroom.requested.includes(userId) && !chatroom.members.includes(userId)'
+          class="float-right">
           <button class="btn btn-success btn-sm" (click)="requestToJoinChatroom(chatroom.roomId)">Request</button>
         </p>
 
@@ -31,9 +32,9 @@
           <button class="btn btn-warning btn-sm" disabled>Pending</button>
         </p>
 
-          <p *ngIf='!chatroom.active' class="float-right">
-            <button class="btn btn-warning btn-sm" [routerLink]="['/settings',chatroom.roomId]">Settings</button>
-          </p>
+        <p *ngIf='!chatroom.active' class="float-right">
+          <button class="btn btn-warning btn-sm" [routerLink]="['/settings',chatroom.roomId]">Settings</button>
+        </p>
 
         <br>
         <br> No. of Members:

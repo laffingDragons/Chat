@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { AppService } from './../../app.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
@@ -19,14 +19,14 @@ export class SignupComponent implements OnInit {
 
   public roomId: any;
 
-  constructor(  
+  constructor(
     public appService: AppService,
     public router: Router,
     public _route: ActivatedRoute,
     private toastr: ToastsManager,
     vcr: ViewContainerRef) {
-      this.toastr.setRootViewContainerRef(vcr);
-     }
+    this.toastr.setRootViewContainerRef(vcr);
+  }
 
   ngOnInit() {
 
@@ -45,7 +45,7 @@ export class SignupComponent implements OnInit {
 
     if (!this.firstName) {
       this.toastr.warning('enter first name')
-     
+
 
     } else if (!this.lastName) {
       this.toastr.warning('enter last name')
@@ -58,7 +58,7 @@ export class SignupComponent implements OnInit {
 
     } else if (!this.password) {
       this.toastr.warning('enter password')
-     
+
 
     } else {
 
@@ -70,12 +70,8 @@ export class SignupComponent implements OnInit {
         password: this.password,
       }
 
-      console.log(data);
-
       this.appService.signupFunction(data)
         .subscribe((apiResponse) => {
-
-          console.log(apiResponse);
 
           apiResponse.data.userDetails.roomId = this.roomId; // code to set roomId which is capture by query
 
@@ -84,13 +80,13 @@ export class SignupComponent implements OnInit {
             this.toastr.success('Signup successful');
 
             Cookie.set('authtoken', apiResponse.data.authToken);
-            
+
             Cookie.set('receiverId', apiResponse.data.userDetails.userId);
-           
+
             Cookie.set('receiverName', apiResponse.data.userDetails.firstName + ' ' + apiResponse.data.userDetails.lastName);
-          
+
             this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails)
-           
+
 
             setTimeout(() => {
 
@@ -107,7 +103,7 @@ export class SignupComponent implements OnInit {
         }, (err) => {
 
           this.toastr.error('some error occured');
-          
+
 
         });
 

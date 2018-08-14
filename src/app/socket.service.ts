@@ -47,16 +47,24 @@ export class SocketService {
     
     return Observable.create((observer) => {
 
-      this.socket.on("online-user-list", (userList) => {
-      
-        observer.next(userList);
-
-      }); // end Socket
+        
+        this.socket.on("online-user-list", (userList) => {
+          
+          observer.next(userList);
+  
+        }); // end Socket
 
     }); // end Observable
 
   } // end onlineUserList
 
+  //refresh online users
+  public refresh = () => {
+
+    this.socket.emit("refresh");
+    console.log(`refresh at socket service hit`);
+    
+  }
 
   public disconnectedSocket = () => {
 

@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { AppService } from './../../app.service';
@@ -32,15 +32,15 @@ export class LoginComponent implements OnInit {
 
     this.roomId = this._route.snapshot.queryParams["roomId"]; //code to capture Chat room if there, if they have been ivited via mail
 
-     let userInfo = this.appService.getUserInfoFromLocalstorage() // code to check wether user has already login .
+    let userInfo = this.appService.getUserInfoFromLocalstorage() // code to check wether user has already login .
 
     // code to redirect user to chat screen if they has been already verify
-     if(userInfo.userId){
+    //  if(userInfo.userId){
 
-      this.router.navigate(['/chat']);
+    //   this.router.navigate(['/chat']);
 
-     }
-    
+    //  }
+
   }
 
   public goToSignUp: any = () => {
@@ -77,21 +77,20 @@ export class LoginComponent implements OnInit {
         .subscribe((apiResponse) => {
 
           if (apiResponse.status === 200) {
-            console.log(apiResponse)
 
             apiResponse.data.userDetails.roomId = this.roomId; // code to set roomId which is capture by query
 
-             Cookie.set('authtoken', apiResponse.data.authToken);
-            
-             Cookie.set('receiverId', apiResponse.data.userDetails.userId);
-            
-             Cookie.set('receiverName', apiResponse.data.userDetails.firstName + ' ' + apiResponse.data.userDetails.lastName);
-           
-             this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails);
-            
-             this.router.navigate(['/chat']);
+            Cookie.set('authtoken', apiResponse.data.authToken);
 
-          }else if(apiResponse.status === 404){
+            Cookie.set('receiverId', apiResponse.data.userDetails.userId);
+
+            Cookie.set('receiverName', apiResponse.data.userDetails.firstName + ' ' + apiResponse.data.userDetails.lastName);
+
+            this.appService.setUserInfoInLocalStorage(apiResponse.data.userDetails);
+
+            this.router.navigate(['/chat']);
+
+          } else if (apiResponse.status === 404) {
 
             this.toastr.error("Email or Password wrong");
 
@@ -102,7 +101,7 @@ export class LoginComponent implements OnInit {
           }
 
         }, (err) => {
-          
+
           this.toastr.error('some error occured')
 
         });
@@ -111,8 +110,8 @@ export class LoginComponent implements OnInit {
 
   } // end signinFunction
 
-  
 
-  
+
+
 
 }
