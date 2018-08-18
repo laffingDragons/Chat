@@ -15,7 +15,7 @@ import { HttpErrorResponse, HttpParams } from "@angular/common/http";
 @Injectable()
 export class SocketService {
 
-  private url = 'http://node-chat.akshaypatil.online';
+  private url = 'http://localhost:4200';
 
   private socket;
 

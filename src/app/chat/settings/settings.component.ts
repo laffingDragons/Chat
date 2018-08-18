@@ -45,7 +45,7 @@ export class SettingsComponent implements OnInit {
 
     this.userName = this.appService.getUserInfoFromLocalstorage().firstName;
 
-    this.invitation = `http://angular-chat.akshaypatil.online/login?roomId=${this.roomId}`;
+    this.invitation = `http://localhost:4200/login?roomId=${this.roomId}`;
 
   }
 

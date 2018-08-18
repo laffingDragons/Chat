@@ -13,7 +13,7 @@ import { HttpErrorResponse, HttpParams } from "@angular/common/http";
 @Injectable()
 export class AppService {
 
-  public url =  'http://node-chat.akshaypatil.online';
+  public url =  'http://localhost:4200';
 
   constructor(
     public http: HttpClient
