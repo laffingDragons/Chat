@@ -2,6 +2,28 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.4.
 
+## Screenshots
+
+### User management
+
+![Alt text](https://github.com/laffingDragons/Screenshots/blob/master/6.PNG?raw=true "Title")
+
+### ChatBox
+
+![Alt text](https://github.com/laffingDragons/Screenshots/blob/master/7.PNG?raw=true "Title")
+
+### Create room 
+
+![Alt text](https://github.com/laffingDragons/Screenshots/blob/master/8.PNG?raw=true "Title")
+
+### All rooms
+
+![Alt text](https://github.com/laffingDragons/Screenshots/blob/master/9.PNG?raw=true "Title")
+
+### Edit room 
+
+![Alt text](https://github.com/laffingDragons/Screenshots/blob/master/10.PNG?raw=true "Title")
+
 ## Getting Started
 
 To install the Angular CLI:
